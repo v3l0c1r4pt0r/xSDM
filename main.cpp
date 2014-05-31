@@ -143,3 +143,11 @@ int main(int argc, char **argv)
     }
     return 0;
 }
+
+/*
+ * Roadmap:
+ * - convert to C
+ * - do memory cleanup
+ * - split into functions
+ * - check CRC
+ */
