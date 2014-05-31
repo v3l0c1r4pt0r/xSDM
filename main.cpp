@@ -150,4 +150,6 @@ int main(int argc, char **argv)
  * - do memory cleanup
  * - split into functions
  * - check CRC
+ * - extract to file named according to sdc header
+ * - write possibility to extract more than one file
  */
