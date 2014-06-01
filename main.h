@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <zlib.h>
 #include <errno.h>
+#include <libgen.h>
 
 typedef struct __attribute__ ((__packed__)) header_t
 {

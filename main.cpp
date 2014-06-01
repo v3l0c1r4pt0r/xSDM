@@ -6,33 +6,32 @@ int main(int argc, char **argv)
     {
         int result;
         FILE *in = fopen(argv[1],"r");
-        FILE *out = fopen("wyjscie","w");
-	
-	//open key file
-	void *keyFileName = malloc(strlen(argv[1]+5));
-	sprintf((char*)keyFileName,"%s.key",argv[1]);
+
+        //open key file
+        void *keyFileName = malloc(strlen(argv[1]+5));
+        sprintf((char*)keyFileName,"%s.key",argv[1]);
         FILE *key = fopen((char*)keyFileName,"r");
-	if(key == NULL)
-	  return errno;
-	
-	//load keyFileName
-	fseek(key,0,SEEK_END);
-	int unformattedLength = ftell(key);
-	fseek(key,0,SEEK_SET);
-	void *unformatted = malloc(unformattedLength);
-	fread(unformatted,1,unformattedLength,key);
-	
-	//fill unpack structure
-	UnpackData unpackData;
-	unpackData.unformatted = unformatted;
-	unformatted = NULL;
-	char *keyStart = strstr((char*)unpackData.unformatted,"^^")+2;
-	unpackData.fileNameKey = malloc(0x20);
-	strncpy((char*)unpackData.fileNameKey,keyStart,0x20);
-	unpackData.headerKey = malloc(0x20);
-	strncpy((char*)unpackData.headerKey,keyStart+0x20,0x20);
-	unpackData.checksum = strtoul((char*)unpackData.unformatted,NULL,10);
-	unpackData.xorVal = strtoul(keyStart+0x40,NULL,10);
+        if(key == NULL)
+            return errno;
+
+        //load keyFileName
+        fseek(key,0,SEEK_END);
+        int unformattedLength = ftell(key);
+        fseek(key,0,SEEK_SET);
+        void *unformatted = malloc(unformattedLength);
+        fread(unformatted,1,unformattedLength,key);
+
+        //fill unpack structure
+        UnpackData unpackData;
+        unpackData.unformatted = unformatted;
+        unformatted = NULL;
+        char *keyStart = strstr((char*)unpackData.unformatted,"^^")+2;
+        unpackData.fileNameKey = malloc(0x20);
+        strncpy((char*)unpackData.fileNameKey,keyStart,0x20);
+        unpackData.headerKey = malloc(0x20);
+        strncpy((char*)unpackData.headerKey,keyStart+0x20,0x20);
+        unpackData.checksum = strtoul((char*)unpackData.unformatted,NULL,10);
+        unpackData.xorVal = strtoul(keyStart+0x40,NULL,10);
 
         //load header size
         uint8_t *hdrSizeBuff = (uint8_t*)malloc(4);
@@ -55,7 +54,22 @@ int main(int argc, char **argv)
         cbf2->Initialize((unsigned char*)unpackData.fileNameKey,32);
         data = (unsigned char *)malloc(sizeof(header->fileName));
         cbf2->Decode(header->fileName, data, sizeof(header->fileName));
-        fprintf(stderr,"File name: %s\n",data);
+        fprintf(stderr,"File path: %s\n",data);
+        memcpy(header->fileName,data, sizeof(header->fileName));
+
+        char *pointer = NULL;
+        while((pointer = strstr((char*)header->fileName,"\\")) != NULL)
+        {
+            pointer[0] = '/';
+        }
+
+        char *dirName = (char*)malloc(header->fileNameLength);
+        strncpy(dirName,(char*)header->fileName+1,header->fileNameLength);
+        dirName = dirname(dirName);
+	
+	char *baseName = basename((char*)header->fileName);
+
+        FILE *out = fopen(baseName, "w");
 
         //ensure we are after header
         if(int r = fseek(in,headerSize+4,SEEK_SET)!=0)
@@ -82,11 +96,12 @@ int main(int argc, char **argv)
         unsigned char *input = (unsigned char*)malloc(bytesToRead);	//NOTE: probably a bit different number
         unsigned char *output = (unsigned char*)malloc(0x4000);	//exactly
         void *tmp = malloc(bytesToRead);
+
         while(true)
         {
             result = fread(input+stream.avail_in,1,bytesToRead-stream.avail_in,in);
-	    if(result == 0)
-	      return 0;
+            if(result == 0)
+                return 0;
             fprintf(stderr,"sdc file read is at byte no. %ld (last fread returned %d)\n",ftell(in),result);
 
             //decode
@@ -133,7 +148,7 @@ int main(int argc, char **argv)
         fprintf(stderr,"\n");
         fprintf(stderr,"crc32(0)=0x%lX\n",crc32(0,0,0));
 
-	//TODO: free memory
+        //TODO: free memory
 //         delete cbf1;
 //         delete cbf2;
 // 	free(tmp);
