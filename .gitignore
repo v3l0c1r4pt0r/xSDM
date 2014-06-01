@@ -1,2 +1,4 @@
 *.o
 xSDM
+*.exe
+*.iso
