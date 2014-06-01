@@ -146,7 +146,6 @@ int main(int argc, char **argv)
 
 /*
  * Roadmap:
- * - convert to C
  * - do memory cleanup
  * - split into functions
  * - check CRC
