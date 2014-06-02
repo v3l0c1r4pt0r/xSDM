@@ -96,12 +96,14 @@ int main(int argc, char **argv)
         unsigned char *input = (unsigned char*)malloc(bytesToRead);	//NOTE: probably a bit different number
         unsigned char *output = (unsigned char*)malloc(0x4000);	//exactly
         void *tmp = malloc(bytesToRead);
+	
+	unsigned int bytesRemaining = header->fileSize;
 
-        while(true)
+        while(bytesRemaining != 0)
         {
             result = fread(input+stream.avail_in,1,bytesToRead-stream.avail_in,in);
-            if(result == 0)
-                return 0;
+//             if(result == 0)
+//                 return 0;
             fprintf(stderr,"sdc file read is at byte no. %ld (last fread returned %d)\n",ftell(in),result);
 
             //decode
@@ -126,6 +128,7 @@ int main(int argc, char **argv)
 
             //write to file
             fwrite(output,1,stream.total_out,out);
+	    bytesRemaining -= stream.total_out;
 
             /*
             * tricky part: input buffer hadn't been fully decompressed
