@@ -84,7 +84,11 @@ int main(int argc, char **argv)
         stream.opaque = Z_NULL;
 
         //initialize stream
-        int r = inflateInit2_(&stream,-15,ZLIB_VERSION,(int)sizeof(z_stream));//NOTE: should be "1.2.2",0x38, or maybe not?
+        int r = (int)-1;
+        if(header->headerSignature == moreThan4gb)
+            r = inflateInit(&stream);
+        else
+            r = inflateInit2_(&stream,-15,ZLIB_VERSION,(int)sizeof(z_stream));//NOTE: should be "1.2.2",0x38, or maybe not?
         if(r != Z_OK)
         {
             fprintf(stderr,"inflateInit2_ failed with errorcode %d (%s)\n",r,stream.msg);
@@ -103,8 +107,8 @@ int main(int argc, char **argv)
             bytesRemaining = hu->header4gb.fileSize;
         else
             bytesRemaining = hu->header.fileSize;
-	
-	fprintf(stderr,"file size has been set as %d (0x%04X), signature: %02X\n",bytesRemaining,bytesRemaining,header->headerSignature);
+
+        fprintf(stderr,"file size has been set as %d (0x%04X), signature: %02X\n",bytesRemaining,bytesRemaining,header->headerSignature);
 
         while(bytesRemaining != 0)
         {

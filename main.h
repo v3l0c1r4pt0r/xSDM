@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <libgen.h>
 
+#define moreThan4gb	0xd1
+
 typedef struct __attribute__ ((__packed__)) header_t
 {
   uint32_t	headerSignature;
