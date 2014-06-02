@@ -18,7 +18,7 @@ typedef struct __attribute__ ((__packed__)) header_t
   uint32_t	fileKey;
   uint32_t	unknown3[3];
   uint32_t	fileNameLength;
-  uint8_t	fileName[0x34];
+  uint8_t	fileName;
 } Header;
 
 typedef struct unpackdata_t

@@ -52,22 +52,22 @@ int main(int argc, char **argv)
         //decode data from header
         CBlowFish *cbf2 = new CBlowFish();
         cbf2->Initialize((unsigned char*)unpackData.fileNameKey,32);
-        data = (unsigned char *)malloc(sizeof(header->fileName));
-        cbf2->Decode(header->fileName, data, sizeof(header->fileName));
+        data = (unsigned char *)malloc(cbf2->GetOutputLength(header->fileNameLength));
+        cbf2->Decode((unsigned char*)&header->fileName, data, cbf2->GetOutputLength(header->fileNameLength));
         fprintf(stderr,"File path: %s\n",data);
-        memcpy(header->fileName,data, sizeof(header->fileName));
+        memcpy((void*)&header->fileName,data, cbf2->GetOutputLength(header->fileNameLength));
 
         char *pointer = NULL;
-        while((pointer = strstr((char*)header->fileName,"\\")) != NULL)
+        while((pointer = strstr((char*)&header->fileName,"\\")) != NULL)
         {
             pointer[0] = '/';
         }
 
         char *dirName = (char*)malloc(header->fileNameLength);
-        strncpy(dirName,(char*)header->fileName+1,header->fileNameLength);
+        strncpy(dirName,(char*)&header->fileName+1,header->fileNameLength);
         dirName = dirname(dirName);
 	
-	char *baseName = basename((char*)header->fileName);
+	char *baseName = basename((char*)&header->fileName);
 
         FILE *out = fopen(baseName, "w");
 
@@ -142,7 +142,7 @@ int main(int argc, char **argv)
 
         //write sdc header to &2
         uint8_t *headerBuff = (uint8_t*)header;
-        for(int i = 0; i < 0x100; i++)
+        for(int i = 0; i < 0x200; i++)
         {
             if(i%8==0)
                 fprintf(stderr,"\n%04X:\t",i);
