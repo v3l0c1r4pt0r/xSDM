@@ -113,7 +113,7 @@ int main(int argc, char **argv)
         while(bytesRemaining != 0)
         {
             result = fread(input+stream.avail_in,1,bytesToRead-stream.avail_in,in);
-            if(result == 0)
+            if(result == 0 && stream.avail_in == 0)	//stop only if stream iflated whole previous buffer
                 return 1;	//still have bytes remaining but container end reached
 //             fprintf(stderr,"sdc file read is at byte no. %ld (last fread returned %d)\n",ftell(in),result);
 
