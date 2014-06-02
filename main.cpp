@@ -66,8 +66,8 @@ int main(int argc, char **argv)
         char *dirName = (char*)malloc(header->fileNameLength);
         strncpy(dirName,(char*)&header->fileName+1,header->fileNameLength);
         dirName = dirname(dirName);
-	
-	char *baseName = basename((char*)&header->fileName);
+
+        char *baseName = basename((char*)&header->fileName);
 
         FILE *out = fopen(baseName, "w");
 
@@ -90,14 +90,21 @@ int main(int argc, char **argv)
             fprintf(stderr,"inflateInit2_ failed with errorcode %d (%s)\n",r,stream.msg);
             return r;
         }
-
         //read from file
-        unsigned int bytesToRead = header->strangeSize & 0x3fff;
+        unsigned int bytesToRead = header->compressedSize & 0x3fff;
         unsigned char *input = (unsigned char*)malloc(bytesToRead);	//NOTE: probably a bit different number
-        unsigned char *output = (unsigned char*)malloc(0x4000);	//exactly
+        unsigned char *output = (unsigned char*)malloc(0x4000);		//exactly
         void *tmp = malloc(bytesToRead);
+
+        //determine file size
+        unsigned int bytesRemaining = 0;
+        HeaderUnion *hu = (HeaderUnion*)header;
+        if(hu->header.headerSignature == 0xd1)
+            bytesRemaining = hu->header4gb.fileSize;
+        else
+            bytesRemaining = hu->header.fileSize;
 	
-	unsigned int bytesRemaining = header->fileSize;
+	fprintf(stderr,"file size has been set as %d (0x%04X), signature: %02X\n",bytesRemaining,bytesRemaining,header->headerSignature);
 
         while(bytesRemaining != 0)
         {
@@ -128,7 +135,7 @@ int main(int argc, char **argv)
 
             //write to file
             fwrite(output,1,stream.total_out,out);
-	    bytesRemaining -= stream.total_out;
+            bytesRemaining -= stream.total_out;
 
             /*
             * tricky part: input buffer hadn't been fully decompressed
