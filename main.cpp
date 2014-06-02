@@ -104,7 +104,7 @@ int main(int argc, char **argv)
             result = fread(input+stream.avail_in,1,bytesToRead-stream.avail_in,in);
             if(result == 0)
                 return 1;	//still have bytes remaining but container end reached
-            fprintf(stderr,"sdc file read is at byte no. %ld (last fread returned %d)\n",ftell(in),result);
+//             fprintf(stderr,"sdc file read is at byte no. %ld (last fread returned %d)\n",ftell(in),result);
 
             //decode
             stream.next_in = (Bytef*)input;
