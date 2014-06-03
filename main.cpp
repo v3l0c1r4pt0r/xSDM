@@ -9,13 +9,22 @@ int main(int argc, char **argv)
     }
     int result;
     FILE *in = fopen(argv[1],"r");
+    if(in == NULL)
+    {
+        //error opening sdc file, exists?
+        return errno;
+    }
 
     //open key file
     void *keyFileName = malloc(strlen(argv[1])+5);
     sprintf((char*)keyFileName,"%s.key",argv[1]);
     FILE *key = fopen((char*)keyFileName,"r");
     if(key == NULL)
+    {
+        //error opening key file, exists?
+        printf("While opening key file fopen() returned errno: %d\n",errno);
         return errno;
+    }
 
     //load keyFileName
     fseek(key,0,SEEK_END);
