@@ -8,7 +8,7 @@ int main(int argc, char **argv)
         FILE *in = fopen(argv[1],"r");
 
         //open key file
-        void *keyFileName = malloc(strlen(argv[1]+5));
+        void *keyFileName = malloc(strlen(argv[1])+5);
         sprintf((char*)keyFileName,"%s.key",argv[1]);
         FILE *key = fopen((char*)keyFileName,"r");
         if(key == NULL)
@@ -103,12 +103,12 @@ int main(int argc, char **argv)
         //determine file size
         unsigned int bytesRemaining = 0;
         HeaderUnion *hu = (HeaderUnion*)header;
-        if(hu->header.headerSignature == 0xd1)
+        if(hu->header.headerSignature == moreThan4gb)
             bytesRemaining = hu->header4gb.fileSize;
         else
             bytesRemaining = hu->header.fileSize;
 
-        fprintf(stderr,"file size has been set as %d (0x%04X), signature: %02X\n",bytesRemaining,bytesRemaining,header->headerSignature);
+        fprintf(stderr,"file size has been set as %u (0x%04X), signature: 0x%02X\n",bytesRemaining,bytesRemaining,header->headerSignature);
 
         while(bytesRemaining != 0)
         {
@@ -178,6 +178,6 @@ int main(int argc, char **argv)
  * - do memory cleanup
  * - split into functions
  * - check CRC
- * - extract to file named according to sdc header
+ * * extract to file named according to sdc header
  * - write possibility to extract more than one file
  */
