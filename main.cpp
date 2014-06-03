@@ -12,6 +12,7 @@ int main(int argc, char **argv)
     if(in == NULL)
     {
         //error opening sdc file, exists?
+        printf("While opening sdc file fopen() returned errno: %d\n",errno);
         return errno;
     }
 
