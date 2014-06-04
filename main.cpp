@@ -37,15 +37,6 @@ int main(int argc, char **argv)
     //fill unpack structure
     UnpackData unpackData;
     fillUnpackStruct(&unpackData,unformatted);
-//     unpackData.unformatted = unformatted;
-//     unformatted = NULL;
-//     char *keyStart = strstr((char*)unpackData.unformatted,"^^")+2;
-//     unpackData.fileNameKey = malloc(0x20);
-//     strncpy((char*)unpackData.fileNameKey,keyStart,0x20);
-//     unpackData.headerKey = malloc(0x20);
-//     strncpy((char*)unpackData.headerKey,keyStart+0x20,0x20);
-//     unpackData.checksum = strtoul((char*)unpackData.unformatted,NULL,10);
-//     unpackData.xorVal = strtoul(keyStart+0x40,NULL,10);
 
     //load header size
     uint8_t *hdrSizeBuff = (uint8_t*)malloc(4);
@@ -60,7 +51,8 @@ int main(int argc, char **argv)
     unsigned char *data = (unsigned char *)malloc(sizeof(Header));
     fread(data,1,headerSize,in);
     cbf1->Decode(data, (unsigned char *)header, headerSize);
-//         free(data);
+    delete cbf1;
+//         free(data);	//TODO: it should be freed
     data = NULL;
 
     //decode data from header
@@ -68,6 +60,8 @@ int main(int argc, char **argv)
     cbf2->Initialize((unsigned char*)unpackData.fileNameKey,32);
     data = (unsigned char *)malloc(cbf2->GetOutputLength(header->fileNameLength));
     cbf2->Decode((unsigned char*)&header->fileName, data, cbf2->GetOutputLength(header->fileNameLength));
+    delete cbf2;
+    
     fprintf(stderr,"File path: %s\n",data);
     memcpy((void*)&header->fileName,data, cbf2->GetOutputLength(header->fileNameLength));
 
@@ -178,8 +172,6 @@ int main(int argc, char **argv)
     fprintf(stderr,"crc32(0)=0x%lX\n",crc32(0,0,0));
 
     //TODO: free memory
-//         delete cbf1;
-//         delete cbf2;
 // 	free(tmp);
 
     fclose(in);
@@ -189,10 +181,10 @@ int main(int argc, char **argv)
 
 void xorBuffer(uint8_t factor, unsigned char *buffer, uint32_t bufferSize)
 {
-  for(unsigned int i = 0; i < bufferSize; i++)
-  {
-    buffer[i] ^= factor;
-  }
+    for(unsigned int i = 0; i < bufferSize; i++)
+    {
+        buffer[i] ^= factor;
+    }
 }
 
 void fillUnpackStruct(UnpackData *unpackData, void *edv)	//TODO: return int/enum and indicate wrong format
@@ -210,7 +202,7 @@ void fillUnpackStruct(UnpackData *unpackData, void *edv)	//TODO: return int/enum
 /*
  * Roadmap:
  * - do memory cleanup
- * - split into functions
+ * * split into functions
  * - check CRC
  * * extract to file named according to sdc header
  * - write possibility to extract more than one file
