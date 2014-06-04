@@ -145,10 +145,11 @@ int main(int argc, char **argv)
         }
 
         //XOR
-        for(unsigned int i = 0; i < stream.total_out; i++)
+        xorBuffer(unpackData.xorVal % 0x100, output, stream.total_out);
+        /*for(unsigned int i = 0; i < stream.total_out; i++)
         {
             output[i] ^= (unsigned char)unpackData.xorVal % 0x100;
-        }
+        }*/
 
         //write to file
         fwrite(output,1,stream.total_out,out);
@@ -183,6 +184,14 @@ int main(int argc, char **argv)
     fclose(in);
     fclose(out);
     return 0;
+}
+
+void xorBuffer(uint8_t factor, unsigned char *buffer, uint32_t bufferSize)
+{
+  for(unsigned int i = 0; i < bufferSize; i++)
+  {
+    buffer[i] ^= factor;
+  }
 }
 
 /*

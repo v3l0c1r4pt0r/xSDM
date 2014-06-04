@@ -51,3 +51,8 @@ typedef struct unpackdata_t
   void *fileNameKey;
   void *unformatted;
 } UnpackData;
+
+/*
+ * xor every byte of a BUFFER by FACTOR
+ */
+void xorBuffer(uint8_t factor, unsigned char* buffer, uint32_t bufferSize);
