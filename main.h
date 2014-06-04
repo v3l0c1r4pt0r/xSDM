@@ -56,3 +56,8 @@ typedef struct unpackdata_t
  * xor every byte of a BUFFER by FACTOR
  */
 void xorBuffer(uint8_t factor, unsigned char* buffer, uint32_t bufferSize);
+
+/*
+ * transforms edv in format "[int]^^[key2][key1][int]" into UnpackData struct
+ */
+void fillUnpackStruct(UnpackData* unpackData, void* edv);
