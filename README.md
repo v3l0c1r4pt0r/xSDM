@@ -3,6 +3,10 @@ xSDM
 
 Open-source unpacker for Microsoft's proprietary SDC format
 
+What is it?
+-----------
+xSDM is the program that unpacks from SDC (Secure Download Container) archive files. SDC is the format used by SDM (Secure Download Manager) - program needed to download from sites like MSDNAA/Dreamspark. It requires key file that can be gained by sniffing Dreamspark's transmission or using browser's developer tools.
+
 Installation
 ------------
 
