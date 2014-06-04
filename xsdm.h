@@ -1,3 +1,4 @@
+#include "bfsh-con/blowfish.h"
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -20,3 +21,9 @@ void xorBuffer(uint8_t factor, unsigned char* buffer, uint32_t bufferSize);
  * transforms edv in format "[int]^^[key2][key1][int]" into UnpackData struct
  */
 void fillUnpackStruct(UnpackData* unpackData, void* edv);
+
+/*
+ * decrypts data from BUFFER of BUFFERSIZE size in bytes using KEY of length of KEYLENGTH,
+ * returns buffer with decrypted data and sets BUFFERSIZE according to its size
+ */
+void *decryptData(void *buffer, uint32_t *bufferSize, void *key, uint32_t keyLength);

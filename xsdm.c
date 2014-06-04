@@ -19,3 +19,15 @@ void fillUnpackStruct(UnpackData *unpackData, void *edv)	//TODO: return int/enum
     unpackData->checksum = strtoul((char*)unpackData->unformatted,NULL,10);
     unpackData->xorVal = strtoul(keyStart+0x40,NULL,10);
 }
+
+void *decryptData(void *buffer, uint32_t *bufferSize, void *key, uint32_t keyLength)
+{
+    CBlowFish *cbf1 = new CBlowFish();
+    cbf1->Initialize((unsigned char *)key,32);
+    uint32_t size = cbf1->GetOutputLength(*bufferSize);
+    void *result = malloc(size);
+    cbf1->Decode((unsigned char*)buffer, (unsigned char*)result, *bufferSize);
+    delete cbf1;
+    *bufferSize = size;
+    return result;
+}
