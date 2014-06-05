@@ -2,18 +2,22 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
+AC_INIT([xsdm], [0.10], [v3l0c1r4pt0r@gmail.com])
 AC_CONFIG_SRCDIR([src/main.h])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_FILES([Makefile])
 
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
 
 # Checks for libraries.
+AC_CHECK_LIB([z], [inflate_], [],[
+         echo "Zlib is required for this program"
+         exit -1])
 
 # Checks for header files.
-AC_CHECK_HEADERS([stdint.h stdlib.h string.h])
+AC_CHECK_HEADERS([stdint.h stdlib.h string.h errno.h stdio.h libgen.h zlib.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_UINT32_T
