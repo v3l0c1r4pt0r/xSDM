@@ -44,15 +44,15 @@ int main(int argc, char **argv)
     uint32_t headerSize = *(uint32_t*)hdrSizeBuff;
 
     //decode header
-    CBlowFish *cbf1 = new CBlowFish();
-    cbf1->Initialize((unsigned char*)unpackData.headerKey,32);
-    Header *header = (Header*)malloc(headerSize);
+//     CBlowFish *cbf1 = new CBlowFish();
+//     cbf1->Initialize((unsigned char*)unpackData.headerKey,32);
+    Header *header;// = (Header*)malloc(headerSize);
 
-    unsigned char *data = (unsigned char *)malloc(sizeof(Header));
+    unsigned char *data = (unsigned char *)malloc(headerSize);
     fread(data,1,headerSize,in);
-//     header = (Header*)decryptData(data, &headerSize, unpackData.headerKey, 32);
-    cbf1->Decode(data, (unsigned char *)header, headerSize);
-    delete cbf1;
+    header = (Header*)decryptData(data, &headerSize, unpackData.headerKey, 32);
+//     cbf1->Decode(data, (unsigned char *)header, headerSize);
+//     delete cbf1;
 //         free(data);	//TODO: it should be freed
     data = NULL;
 
