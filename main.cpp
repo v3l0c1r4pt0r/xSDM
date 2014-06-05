@@ -57,13 +57,13 @@ int main(int argc, char **argv)
     data = NULL;
 
     //decode data from header
-    CBlowFish *cbf2 = new CBlowFish();
-    cbf2->Initialize((unsigned char*)unpackData.fileNameKey,32);
-    data = (unsigned char *)malloc(cbf2->GetOutputLength(header->fileNameLength));
-    cbf2->Decode((unsigned char*)&header->fileName, data, cbf2->GetOutputLength(header->fileNameLength));
-    delete cbf2;
+//     CBlowFish *cbf2 = new CBlowFish();
+//     cbf2->Initialize((unsigned char*)unpackData.fileNameKey,32);
+//     data = (unsigned char *)malloc(cbf2->GetOutputLength(header->fileNameLength));
+//     cbf2->Decode((unsigned char*)&header->fileName, data, cbf2->GetOutputLength(header->fileNameLength));
+//     delete cbf2;
     uint32_t fnLength = header->fileNameLength;
-//     data = (unsigned char*)decryptData(&header->fileName, &fnLength, unpackData.fileNameKey, 32);
+    data = (unsigned char*)decryptData(&header->fileName, &fnLength, unpackData.fileNameKey, 32);
     
     fprintf(stderr,"File path: %s\n",data);
     memcpy((void*)&header->fileName,data, fnLength);
