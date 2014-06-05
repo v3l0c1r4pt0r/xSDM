@@ -89,7 +89,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_xsdm_OBJECTS = main.$(OBJEXT) xsdc.$(OBJEXT)
+am__dirstamp = $(am__leading_dot)dirstamp
+am_xsdm_OBJECTS = main.$(OBJEXT) xsdc.$(OBJEXT) \
+	bfsh-con/blowfish.$(OBJEXT)
 xsdm_OBJECTS = $(am_xsdm_OBJECTS)
 xsdm_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
@@ -239,10 +241,9 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-SUBDIR_OBJECTS = bfsh-con/blowfish.cpp
 AM_CFLAGS = -Wall
 AM_LDFLAGS = 
-xsdm_SOURCES = main.cpp xsdc.cpp blowfish.o
+xsdm_SOURCES = main.cpp xsdc.cpp bfsh-con/blowfish.cpp
 all: all-am
 
 .SUFFIXES:
@@ -319,6 +320,14 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+bfsh-con/$(am__dirstamp):
+	@$(MKDIR_P) bfsh-con
+	@: > bfsh-con/$(am__dirstamp)
+bfsh-con/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) bfsh-con/$(DEPDIR)
+	@: > bfsh-con/$(DEPDIR)/$(am__dirstamp)
+bfsh-con/blowfish.$(OBJEXT): bfsh-con/$(am__dirstamp) \
+	bfsh-con/$(DEPDIR)/$(am__dirstamp)
 
 xsdm$(EXEEXT): $(xsdm_OBJECTS) $(xsdm_DEPENDENCIES) $(EXTRA_xsdm_DEPENDENCIES) 
 	@rm -f xsdm$(EXEEXT)
@@ -326,23 +335,27 @@ xsdm$(EXEEXT): $(xsdm_OBJECTS) $(xsdm_DEPENDENCIES) $(EXTRA_xsdm_DEPENDENCIES)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f bfsh-con/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/main.Po
 include ./$(DEPDIR)/xsdc.Po
+include bfsh-con/$(DEPDIR)/blowfish.Po
 
 .cpp.o:
-	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+	$(am__mv) $$depbase.Tpo $$depbase.Po
 #	$(AM_V_CXX)source='$<' object='$@' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ $<
 
 .cpp.obj:
-	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+	$(am__mv) $$depbase.Tpo $$depbase.Po
 #	$(AM_V_CXX)source='$<' object='$@' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
@@ -462,6 +475,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f bfsh-con/$(DEPDIR)/$(am__dirstamp)
+	-rm -f bfsh-con/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -471,7 +486,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR)
+	-rm -rf ./$(DEPDIR) bfsh-con/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -517,7 +532,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR)
+	-rm -rf ./$(DEPDIR) bfsh-con/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
