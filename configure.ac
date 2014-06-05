@@ -2,17 +2,18 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([xsdm], [0.10], [v3l0c1r4pt0r@gmail.com])
+AC_INIT([xsdm], [0.10])
 AC_CONFIG_SRCDIR([src/main.h])
-AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile])
+AM_INIT_AUTOMAKE
+AC_OUTPUT(Makefile src/Makefile)
+# AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
 
 # Checks for libraries.
-AC_CHECK_LIB([z], [inflate_], [],[
+AC_CHECK_LIB([z], [inflate], [],[
          echo "Zlib is required for this program"
          exit -1])
 

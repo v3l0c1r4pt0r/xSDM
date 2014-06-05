@@ -1,6 +1,9 @@
 *.o
-xSDM
+src/xsdm
 *.exe
 *.iso
 *.md5
 *.log
+*.cache
+src/.deps/
+config.status
