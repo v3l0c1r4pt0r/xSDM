@@ -75,8 +75,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-TESTS = check_fillunpackstruct$(EXEEXT)
-check_PROGRAMS = check_fillunpackstruct$(EXEEXT)
+TESTS = check_xsdc$(EXEEXT)
+check_PROGRAMS = check_xsdc$(EXEEXT)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp $(top_srcdir)/test-driver
@@ -87,12 +87,11 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am_check_fillunpackstruct_OBJECTS =  \
-	check_fillunpackstruct-check_fillunpackstruct.$(OBJEXT)
-check_fillunpackstruct_OBJECTS = $(am_check_fillunpackstruct_OBJECTS)
-check_fillunpackstruct_LDADD = $(LDADD)
-check_fillunpackstruct_LINK = $(CCLD) $(check_fillunpackstruct_CFLAGS) \
-	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_check_xsdc_OBJECTS = check_xsdc-check_xsdc.$(OBJEXT)
+check_xsdc_OBJECTS = $(am_check_xsdc_OBJECTS)
+check_xsdc_LDADD = $(LDADD)
+check_xsdc_LINK = $(CCLD) $(check_xsdc_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -125,8 +124,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(check_fillunpackstruct_SOURCES)
-DIST_SOURCES = $(check_fillunpackstruct_SOURCES)
+SOURCES = $(check_xsdc_SOURCES)
+DIST_SOURCES = $(check_xsdc_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -449,8 +448,8 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-check_fillunpackstruct_SOURCES = check_fillunpackstruct.c $(top_builddir)/src/xsdc.h
-check_fillunpackstruct_CFLAGS = @CHECK_CFLAGS@
+check_xsdc_SOURCES = check_xsdc.c $(top_builddir)/src/xsdc.h
+check_xsdc_CFLAGS = @CHECK_CFLAGS@
 all: all-am
 
 .SUFFIXES:
@@ -489,9 +488,9 @@ $(am__aclocal_m4_deps):
 clean-checkPROGRAMS:
 	-test -z "$(check_PROGRAMS)" || rm -f $(check_PROGRAMS)
 
-check_fillunpackstruct$(EXEEXT): $(check_fillunpackstruct_OBJECTS) $(check_fillunpackstruct_DEPENDENCIES) $(EXTRA_check_fillunpackstruct_DEPENDENCIES) 
-	@rm -f check_fillunpackstruct$(EXEEXT)
-	$(AM_V_CCLD)$(check_fillunpackstruct_LINK) $(check_fillunpackstruct_OBJECTS) $(check_fillunpackstruct_LDADD) $(LIBS)
+check_xsdc$(EXEEXT): $(check_xsdc_OBJECTS) $(check_xsdc_DEPENDENCIES) $(EXTRA_check_xsdc_DEPENDENCIES) 
+	@rm -f check_xsdc$(EXEEXT)
+	$(AM_V_CCLD)$(check_xsdc_LINK) $(check_xsdc_OBJECTS) $(check_xsdc_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -499,7 +498,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_fillunpackstruct-check_fillunpackstruct.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_xsdc-check_xsdc.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -517,19 +516,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-check_fillunpackstruct-check_fillunpackstruct.o: check_fillunpackstruct.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_fillunpackstruct_CFLAGS) $(CFLAGS) -MT check_fillunpackstruct-check_fillunpackstruct.o -MD -MP -MF $(DEPDIR)/check_fillunpackstruct-check_fillunpackstruct.Tpo -c -o check_fillunpackstruct-check_fillunpackstruct.o `test -f 'check_fillunpackstruct.c' || echo '$(srcdir)/'`check_fillunpackstruct.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_fillunpackstruct-check_fillunpackstruct.Tpo $(DEPDIR)/check_fillunpackstruct-check_fillunpackstruct.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_fillunpackstruct.c' object='check_fillunpackstruct-check_fillunpackstruct.o' libtool=no @AMDEPBACKSLASH@
+check_xsdc-check_xsdc.o: check_xsdc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_xsdc_CFLAGS) $(CFLAGS) -MT check_xsdc-check_xsdc.o -MD -MP -MF $(DEPDIR)/check_xsdc-check_xsdc.Tpo -c -o check_xsdc-check_xsdc.o `test -f 'check_xsdc.c' || echo '$(srcdir)/'`check_xsdc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_xsdc-check_xsdc.Tpo $(DEPDIR)/check_xsdc-check_xsdc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_xsdc.c' object='check_xsdc-check_xsdc.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_fillunpackstruct_CFLAGS) $(CFLAGS) -c -o check_fillunpackstruct-check_fillunpackstruct.o `test -f 'check_fillunpackstruct.c' || echo '$(srcdir)/'`check_fillunpackstruct.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_xsdc_CFLAGS) $(CFLAGS) -c -o check_xsdc-check_xsdc.o `test -f 'check_xsdc.c' || echo '$(srcdir)/'`check_xsdc.c
 
-check_fillunpackstruct-check_fillunpackstruct.obj: check_fillunpackstruct.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_fillunpackstruct_CFLAGS) $(CFLAGS) -MT check_fillunpackstruct-check_fillunpackstruct.obj -MD -MP -MF $(DEPDIR)/check_fillunpackstruct-check_fillunpackstruct.Tpo -c -o check_fillunpackstruct-check_fillunpackstruct.obj `if test -f 'check_fillunpackstruct.c'; then $(CYGPATH_W) 'check_fillunpackstruct.c'; else $(CYGPATH_W) '$(srcdir)/check_fillunpackstruct.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_fillunpackstruct-check_fillunpackstruct.Tpo $(DEPDIR)/check_fillunpackstruct-check_fillunpackstruct.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_fillunpackstruct.c' object='check_fillunpackstruct-check_fillunpackstruct.obj' libtool=no @AMDEPBACKSLASH@
+check_xsdc-check_xsdc.obj: check_xsdc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_xsdc_CFLAGS) $(CFLAGS) -MT check_xsdc-check_xsdc.obj -MD -MP -MF $(DEPDIR)/check_xsdc-check_xsdc.Tpo -c -o check_xsdc-check_xsdc.obj `if test -f 'check_xsdc.c'; then $(CYGPATH_W) 'check_xsdc.c'; else $(CYGPATH_W) '$(srcdir)/check_xsdc.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_xsdc-check_xsdc.Tpo $(DEPDIR)/check_xsdc-check_xsdc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_xsdc.c' object='check_xsdc-check_xsdc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_fillunpackstruct_CFLAGS) $(CFLAGS) -c -o check_fillunpackstruct-check_fillunpackstruct.obj `if test -f 'check_fillunpackstruct.c'; then $(CYGPATH_W) 'check_fillunpackstruct.c'; else $(CYGPATH_W) '$(srcdir)/check_fillunpackstruct.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_xsdc_CFLAGS) $(CFLAGS) -c -o check_xsdc-check_xsdc.obj `if test -f 'check_xsdc.c'; then $(CYGPATH_W) 'check_xsdc.c'; else $(CYGPATH_W) '$(srcdir)/check_xsdc.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -724,9 +723,9 @@ recheck: all $(check_PROGRAMS)
 	        am__force_recheck=am--force-recheck \
 	        TEST_LOGS="$$log_list"; \
 	exit $$?
-check_fillunpackstruct.log: check_fillunpackstruct$(EXEEXT)
-	@p='check_fillunpackstruct$(EXEEXT)'; \
-	b='check_fillunpackstruct'; \
+check_xsdc.log: check_xsdc$(EXEEXT)
+	@p='check_xsdc$(EXEEXT)'; \
+	b='check_xsdc'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -899,7 +898,7 @@ uninstall-am:
 	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
 	recheck tags tags-am uninstall uninstall-am
 
-#check_fillunpackstruct_LDADD = $(top_builddir)/src/libmoney.la @CHECK_LIBS@
+#check_xsdc_LDADD = $(top_builddir)/src/libmoney.la @CHECK_LIBS@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
