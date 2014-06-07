@@ -40,7 +40,7 @@ xsdc_suite (void)
     /* Core test case */
     TCase *tc_core = tcase_create ("Core");
     tcase_add_test (tc_core, test_check_fillunpackstruct);
-    tcase_add_test (tc_core, test_check_decryptdata);
+//     tcase_add_test (tc_core, test_check_decryptdata);
     suite_add_tcase (s, tc_core);
 
     return s;
