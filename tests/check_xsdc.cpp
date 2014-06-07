@@ -1,4 +1,5 @@
 #include <check.h>
+#include <stdio.h>
 #include "../src/xsdc.h"
 
 START_TEST (test_check_fillunpackstruct)
@@ -13,6 +14,24 @@ START_TEST (test_check_fillunpackstruct)
 }
 END_TEST
 
+START_TEST (test_check_decryptdata)
+{
+    char target[] = {
+      0x0b, 0xa2, 0xd1, 0xdb, 0xd8, 0xb9, 0xbd, 0x59, 0x34, 0xc4, 0x84, 0xf1, 0xc2, 0x04, 0x58, 0xc3,
+      0x50, 0x71, 0x80, 0x04, 0x96, 0xd2, 0xa9, 0x00, 0x8b, 0x81, 0xa0, 0x50, 0xd9, 0x69, 0x1c, 0x4e,
+      0xea, 0x7f, 0xb1, 0x9f, 0x51, 0x3c, 0x54, 0x22, 0x51, 0x54, 0xdc, 0xc4, 0xa1, 0x48, 0xa1, 0x8d,
+      0x38, 0x03, 0x2f, 0x35, 0x53, 0xfb, 0xc7, 0x50, 0x5a, 0x7f, 0x78, 0xb4, 0x08, 0x62, 0x18, 0xe6,
+      0xd3, 0x17, 0x4f, 0x80, 0x8d, 0x95, 0xbf, 0x30
+    };
+    uint32_t targetSize = sizeof(target);
+    char key[] = "IAMAKEYIAMAKEYIAMAKEYIAMAKEYIAMA";
+    void *actual = decryptData(target, &targetSize, key, 32);	//FIXME: on some systems it probably gives memory corruption
+    char expected[] = "I am chunk of private data encrypted in a target. Can you decrypt me?";
+    ck_assert_msg (strcmp((char*)actual, expected), "Fail! actual: 0x%04x (%s)",actual,actual);
+//     free(actual);
+}
+END_TEST
+
 Suite *
 xsdc_suite (void)
 {
@@ -21,6 +40,7 @@ xsdc_suite (void)
     /* Core test case */
     TCase *tc_core = tcase_create ("Core");
     tcase_add_test (tc_core, test_check_fillunpackstruct);
+    tcase_add_test (tc_core, test_check_decryptdata);
     suite_add_tcase (s, tc_core);
 
     return s;
@@ -32,6 +52,7 @@ main (void)
     int number_failed;
     Suite *s = xsdc_suite ();
     SRunner *sr = srunner_create (s);
+    srunner_set_fork_status(sr, CK_FORK);
     srunner_run_all (sr, CK_NORMAL);
     number_failed = srunner_ntests_failed (sr);
     srunner_free (sr);
