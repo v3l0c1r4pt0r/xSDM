@@ -10,7 +10,13 @@ xSDM is the program that unpacks from SDC (Secure Download Container) archive fi
 Installation
 ------------
 
-Just type make and program should build in current directory
+To compile the program you just need to issue standard
+```
+./configure
+make
+make install
+```
+where make install is optional. It will install xsdm into your system.
 
 Usage
 -----
