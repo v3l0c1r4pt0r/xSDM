@@ -7,9 +7,9 @@ AC_CONFIG_SRCDIR([src/main.h])
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_OUTPUT(Makefile src/Makefile tests/Makefile)
 # AC_CONFIG_HEADERS([config.h])
-AM_PATH_CHECK([0.9], [], [
-         echo "Check is required for this program"
-         exit -1])
+#AM_PATH_CHECK([0.9], [], [
+#         echo "Check is required for this program"
+#         exit -1])
 
 # Checks for programs.
 AC_PROG_CXX
