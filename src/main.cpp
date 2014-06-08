@@ -71,7 +71,20 @@ int main(int argc, char **argv)
 
     char *baseName = basename((char*)&header->fileName);
 
-    FILE *out = fopen(baseName, "w");
+    //open output file
+    char *sdcDir = (char*)malloc(strlen(argv[1]));
+    strcpy(sdcDir,argv[1]);
+    sdcDir = dirname(sdcDir);
+    char *outFile = (char*)malloc(strlen(sdcDir)+strlen(baseName)+2);
+    //TODO: create dirName directory and use $sdcDir/$dirName/$baseName as out
+    sprintf(outFile,"%s/%s",sdcDir,baseName);
+    FILE *out = fopen(outFile, "w");
+    if(out == NULL)
+    {
+        //error opening sdc file, exists?
+        printf("While creating output file fopen() returned errno: %d\n",errno);
+        return errno;
+    }
 
     //ensure we are after header
     if(int r = fseek(in,headerSize+4,SEEK_SET)!=0)
