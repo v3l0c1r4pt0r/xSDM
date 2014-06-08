@@ -93,7 +93,7 @@ int main(int argc, char **argv)
         r = inflateInit2_(&stream,-15,ZLIB_VERSION,(int)sizeof(z_stream));//NOTE: should be "1.2.2",0x38, or maybe not?
     if(r != Z_OK)
     {
-        fprintf(stderr,"inflateInit2_ failed with errorcode %d (%s)\n",r,stream.msg);
+        fprintf(stderr,"inflateInit failed with errorcode %d (%s)\n",r,stream.msg);
         return r;
     }
     //read from file
@@ -116,8 +116,7 @@ int main(int argc, char **argv)
     {
         result = fread(input+stream.avail_in,1,bytesToRead-stream.avail_in,in);
         if(result == 0 && stream.avail_in == 0)	//stop only if stream iflated whole previous buffer
-            return 1;	//still have bytes remaining but container end reached
-//             fprintf(stderr,"sdc file read is at byte no. %ld (last fread returned %d)\n",ftell(in),result);
+            return 1;				//still have bytes remaining but container end reached
 
         //decode
         stream.next_in = (Bytef*)input;
@@ -135,10 +134,6 @@ int main(int argc, char **argv)
 
         //XOR
         xorBuffer(unpackData.xorVal % 0x100, output, stream.total_out);
-        /*for(unsigned int i = 0; i < stream.total_out; i++)
-        {
-            output[i] ^= (unsigned char)unpackData.xorVal % 0x100;
-        }*/
 
         //write to file
         fwrite(output,1,stream.total_out,out);
