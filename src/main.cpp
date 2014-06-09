@@ -164,7 +164,7 @@ int main(int argc, char **argv)
 
         /*
         * tricky part: input buffer hadn't been fully decompressed
-        * so we need to copy the rest to TMP and then at hte beginning
+        * so we need to copy the rest to TMP and then at the beginning
         * of input buffer so it can be inflated, but before that we need to
         * read the rest of a chunk so its size would be STRANGESIZE
         */
