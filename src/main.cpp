@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     unsigned char *data = (unsigned char *)malloc(headerSize);
     fread(data,1,headerSize,in);
     header = (Header*)decryptData(data, &headerSize, unpackData.headerKey, 32);
-//         free(data);	//TODO: it should be freed
+    free(data);
     data = NULL;
 
     //decode data from header
@@ -85,13 +85,18 @@ int main(int argc, char **argv)
         printf("While creating output file fopen() returned errno: %d\n",errno);
         return errno;
     }
+    
+    //memory cleanup
+    free(outFile);
+    free(sdcDir);
+    free(dirName);
 
     //ensure we are after header
     if(int r = fseek(in,headerSize+4,SEEK_SET)!=0)
         return r;
 
     //create inflate struct
-    z_stream stream;// = (z_streamp)malloc(sizeof(z_stream));
+    z_stream stream;
     stream.next_in = Z_NULL;
     stream.avail_in = 0;
     stream.zalloc = Z_NULL;
@@ -161,6 +166,10 @@ int main(int argc, char **argv)
         memcpy(tmp,stream.next_in,stream.avail_in);
         memcpy(input,tmp,stream.avail_in);
     }
+    free(tmp);
+    free(input);
+    free(output);
+    free(unpackData.unformatted);
 
     //write sdc header to &2
     uint8_t *headerBuff = (uint8_t*)header;
@@ -171,10 +180,9 @@ int main(int argc, char **argv)
         fprintf(stderr,"0x%02X ",headerBuff[i]);
     }
     fprintf(stderr,"\n");
-    fprintf(stderr,"crc32(0)=0x%lX\n",crc32(0,0,0));
+//     fprintf(stderr,"crc32(0)=0x%lX\n",crc32(0,0,0));
 
     //TODO: free memory
-// 	free(tmp);
 
     fclose(in);
     fclose(out);
