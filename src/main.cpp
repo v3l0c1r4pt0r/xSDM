@@ -42,6 +42,8 @@ int main(int argc, char **argv)
     uint8_t *hdrSizeBuff = (uint8_t*)malloc(4);
     fread(hdrSizeBuff,1,4,in);
     uint32_t headerSize = *(uint32_t*)hdrSizeBuff;
+    free(hdrSizeBuff);
+    hdrSizeBuff = NULL;
 
     //decode header
     Header *header;// = (Header*)malloc(headerSize);
@@ -88,8 +90,11 @@ int main(int argc, char **argv)
     
     //memory cleanup
     free(outFile);
+    outFile = NULL;
     free(sdcDir);
+    sdcDir = NULL;
     free(dirName);
+    dirName = NULL;
 
     //ensure we are after header
     if(int r = fseek(in,headerSize+4,SEEK_SET)!=0)
@@ -167,9 +172,14 @@ int main(int argc, char **argv)
         memcpy(input,tmp,stream.avail_in);
     }
     free(tmp);
+    tmp = NULL;
     free(input);
+    input = NULL;
     free(output);
+    output = NULL;
     free(unpackData.unformatted);
+    unpackData.unformatted = NULL;
+    //FIXME: after rewriting fillUnpackStruct there should be more NULLs in it here
 
     //write sdc header to &2
     uint8_t *headerBuff = (uint8_t*)header;
@@ -182,8 +192,6 @@ int main(int argc, char **argv)
     fprintf(stderr,"\n");
 //     fprintf(stderr,"crc32(0)=0x%lX\n",crc32(0,0,0));
 
-    //TODO: free memory
-
     fclose(in);
     fclose(out);
     return 0;
@@ -191,7 +199,6 @@ int main(int argc, char **argv)
 
 /*
  * Roadmap:
- * - do memory cleanup
  * * split into functions
  * - check CRC
  * * extract to file named according to sdc header
