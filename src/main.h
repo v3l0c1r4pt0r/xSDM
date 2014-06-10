@@ -7,6 +7,8 @@
 #include <zlib.h>
 #include <errno.h>
 #include <libgen.h>
+#include <sys/stat.h>
+#include <dirent.h>
 
 #define moreThan4gb	0xd1
 

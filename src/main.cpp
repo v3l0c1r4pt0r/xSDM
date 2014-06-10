@@ -57,7 +57,7 @@ int main(int argc, char **argv)
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
     data = (unsigned char*)decryptData(&header->fileName, &fnLength, unpackData.fileNameKey, 32);
-    
+
     fprintf(stderr,"File path: %s\n",data);
     memcpy((void*)&header->fileName,data, fnLength);
 
@@ -73,13 +73,30 @@ int main(int argc, char **argv)
 
     char *baseName = basename((char*)&header->fileName);
 
-    //open output file
+    //get sdc location
     char *sdcDir = (char*)malloc(strlen(argv[1]));
     strcpy(sdcDir,argv[1]);
     sdcDir = dirname(sdcDir);
-    char *outFile = (char*)malloc(strlen(sdcDir)+strlen(baseName)+2);
-    //TODO: create dirName directory and use $sdcDir/$dirName/$baseName as out
-    sprintf(outFile,"%s/%s",sdcDir,baseName);
+    
+    //create directory according to header
+    char *outFile = (char*)malloc(strlen(sdcDir)+strlen(dirName)+2);
+    sprintf(outFile,"%s/%s",sdcDir,dirName);
+    DIR *f = NULL;
+    if((f = opendir(outFile)) == NULL)
+    {
+        if(mkdir(outFile,S_IRWXU | S_IRWXG | S_IROTH | S_IWOTH | S_IXOTH) != 0)
+        {
+            //mkdir failed
+            printf("Directory '%s' creation failed with errno: %d\n",outFile,errno);
+            return errno;
+        }
+    }
+    else
+        closedir(f);
+    
+    //open output file
+    outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen(dirName)+strlen(baseName)+3);
+    sprintf(outFile,"%s/%s/%s",sdcDir,dirName,baseName);
     FILE *out = fopen(outFile, "w");
     if(out == NULL)
     {
@@ -87,7 +104,7 @@ int main(int argc, char **argv)
         printf("While creating output file fopen() returned errno: %d\n",errno);
         return errno;
     }
-    
+
     //memory cleanup
     free(outFile);
     outFile = NULL;
@@ -201,7 +218,6 @@ int main(int argc, char **argv)
  * Roadmap:
  * * split into functions
  * - check CRC
- * * extract to file named according to sdc header
  * - write possibility to extract more than one file
  * - unit tests
  */
