@@ -2,13 +2,26 @@
 
 int main(int argc, char **argv)
 {
-    if(argc<2)
+    uint8_t flags = 0;
+    const char *sdcFile = NULL;
+    if(argc == 2)
     {
-        printf("Usage: %s [sdc-file-name]\n",basename(argv[0]));
+      flags &= ~1;//no verbose
+      sdcFile = argv[1];
+    }
+    else if(strcmp(argv[1],"-v") == 0)
+    {
+      flags |= 1;//verbose
+      sdcFile = argv[2];
+    }
+    else
+    {
+        printf("Usage: %s [-v] [sdc-file-name]\n",basename(argv[0]));
         return -1;
     }
+    printf("flags = %02x\n",flags);
     int result;
-    FILE *in = fopen(argv[1],"r");
+    FILE *in = fopen(sdcFile,"r");
     if(in == NULL)
     {
         //error opening sdc file, exists?
@@ -17,8 +30,8 @@ int main(int argc, char **argv)
     }
 
     //open key file
-    void *keyFileName = malloc(strlen(argv[1])+5);
-    sprintf((char*)keyFileName,"%s.key",argv[1]);
+    void *keyFileName = malloc(strlen(sdcFile)+5);
+    sprintf((char*)keyFileName,"%s.key",sdcFile);
     FILE *key = fopen((char*)keyFileName,"r");
     if(key == NULL)
     {
@@ -74,8 +87,8 @@ int main(int argc, char **argv)
     char *baseName = basename((char*)&header->fileName);
 
     //get sdc location
-    char *sdcDir = (char*)malloc(strlen(argv[1]));
-    strcpy(sdcDir,argv[1]);
+    char *sdcDir = (char*)malloc(strlen(sdcFile));
+    strcpy(sdcDir,sdcFile);
     sdcDir = dirname(sdcDir);
     
     //create directory according to header
