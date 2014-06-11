@@ -6,26 +6,25 @@ int main(int argc, char **argv)
     const char *sdcFile = NULL;
     if(argc == 2)
     {
-      flags &= ~1;//no verbose
-      sdcFile = argv[1];
+        flags &= ~F_VERBOSE;
+        sdcFile = argv[1];
     }
     else if(strcmp(argv[1],"-v") == 0)
     {
-      flags |= 1;//verbose
-      sdcFile = argv[2];
+        flags |= F_VERBOSE;
+        sdcFile = argv[2];
     }
     else
     {
-        printf("Usage: %s [-v] [sdc-file-name]\n",basename(argv[0]));
+        fprintf(stderr,"Usage: %s [-v] [sdc-file-name]\n",basename(argv[0]));
         return -1;
     }
-    printf("flags = %02x\n",flags);
     int result;
     FILE *in = fopen(sdcFile,"r");
     if(in == NULL)
     {
         //error opening sdc file, exists?
-        printf("While opening sdc file fopen() returned errno: %d\n",errno);
+        fprintf(stderr,"While opening sdc file fopen() returned errno: %d\n",errno);
         return errno;
     }
 
@@ -36,7 +35,7 @@ int main(int argc, char **argv)
     if(key == NULL)
     {
         //error opening key file, exists?
-        printf("While opening key file fopen() returned errno: %d\n",errno);
+        fprintf(stderr,"While opening key file fopen() returned errno: %d\n",errno);
         return errno;
     }
 
@@ -71,7 +70,8 @@ int main(int argc, char **argv)
     uint32_t fnLength = header->fileNameLength;
     data = (unsigned char*)decryptData(&header->fileName, &fnLength, unpackData.fileNameKey, 32);
 
-    fprintf(stderr,"File path: %s\n",data);
+    if(flags & F_VERBOSE)
+        fprintf(stderr,"File path: %s\n",data);
     memcpy((void*)&header->fileName,data, fnLength);
 
     char *pointer = NULL;
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     char *sdcDir = (char*)malloc(strlen(sdcFile));
     strcpy(sdcDir,sdcFile);
     sdcDir = dirname(sdcDir);
-    
+
     //create directory according to header
     char *outFile = (char*)malloc(strlen(sdcDir)+strlen(dirName)+2);
     sprintf(outFile,"%s/%s",sdcDir,dirName);
@@ -100,13 +100,13 @@ int main(int argc, char **argv)
         if(mkdir(outFile,S_IRWXU | S_IRWXG | S_IROTH | S_IWOTH | S_IXOTH) != 0)
         {
             //mkdir failed
-            printf("Directory '%s' creation failed with errno: %d\n",outFile,errno);
+            fprintf(stderr,"Directory '%s' creation failed with errno: %d\n",outFile,errno);
             return errno;
         }
     }
     else
         closedir(f);
-    
+
     //open output file
     outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen(dirName)+strlen(baseName)+3);
     sprintf(outFile,"%s/%s/%s",sdcDir,dirName,baseName);
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
     if(out == NULL)
     {
         //error opening sdc file, exists?
-        printf("While creating output file fopen() returned errno: %d\n",errno);
+        fprintf(stderr,"While creating output file fopen() returned errno: %d\n",errno);
         return errno;
     }
 
@@ -163,7 +163,8 @@ int main(int argc, char **argv)
     else
         bytesRemaining = hu->header.fileSize;
 
-    fprintf(stderr,"file size has been set as %u (0x%04X), signature: 0x%02X\n",bytesRemaining,bytesRemaining,header->headerSignature);
+    if(flags & F_VERBOSE)
+        fprintf(stderr,"file size has been set as %u (0x%04X), signature: 0x%02X\n",bytesRemaining,bytesRemaining,header->headerSignature);
 
     while(bytesRemaining != 0)
     {
@@ -213,14 +214,17 @@ int main(int argc, char **argv)
 
     //write sdc header to &2
     uint8_t *headerBuff = (uint8_t*)header;
-    for(int i = 0; i < 0x200; i++)
+    if(flags & F_VERBOSE)
     {
-        if(i%8==0)
-            fprintf(stderr,"\n%04X:\t",i);
-        fprintf(stderr,"0x%02X ",headerBuff[i]);
-    }
-    fprintf(stderr,"\n");
+        for(int i = 0; i < 0x200; i++)
+        {
+            if(i%8==0)
+                fprintf(stderr,"\n%04X:\t",i);
+            fprintf(stderr,"0x%02X ",headerBuff[i]);
+        }
+        fprintf(stderr,"\n");
 //     fprintf(stderr,"crc32(0)=0x%lX\n",crc32(0,0,0));
+    }
 
     fclose(in);
     fclose(out);
