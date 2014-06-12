@@ -9,7 +9,7 @@ int main(int argc, char **argv)
         flags &= ~F_VERBOSE;
         sdcFile = argv[1];
     }
-    else if(strcmp(argv[1],"-v") == 0)
+    else if(argc == 3 && strcmp(argv[1],"-v") == 0)
     {
         flags |= F_VERBOSE;
         sdcFile = argv[2];
