@@ -5485,7 +5485,7 @@ if test "${with_check+set}" = set; then :
 fi
 
 
-  min_check_version=0.9
+  min_check_version=0.9.4
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for check - version >= $min_check_version" >&5
 $as_echo_n "checking for check - version >= $min_check_version... " >&6; }
