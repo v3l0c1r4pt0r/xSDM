@@ -4027,17 +4027,10 @@ $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
 # AC_CONFIG_HEADERS([config.h])
-<<<<<<< HEAD
-#AM_PATH_CHECK([0.9], [], [
-#         echo "Check is required for this program"
-#         exit -1])
-=======
 #the following line not always work
 DEPDIR="${am__leading_dot}deps"
 
 ac_config_commands="$ac_config_commands depfiles"
-
->>>>>>> dev
 
 # Checks for programs.
 ac_ext=cpp
