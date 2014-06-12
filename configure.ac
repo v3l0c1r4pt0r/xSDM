@@ -1,15 +1,16 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.68])
-AC_INIT([xsdm], [0.10])
+AC_PREREQ([2.62])
+AC_INIT([xsdm], [0.1.2])
 AC_CONFIG_SRCDIR([src/main.h])
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_OUTPUT(Makefile src/Makefile tests/Makefile)
 # AC_CONFIG_HEADERS([config.h])
-#AM_PATH_CHECK([0.9], [], [
-#         echo "Check is required for this program"
-#         exit -1])
+#the following line not always work
+AM_PATH_CHECK([0.9.4], [], [
+         echo "Check is required for this program"
+         exit -1])
 
 # Checks for programs.
 AC_PROG_CXX
