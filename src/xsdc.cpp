@@ -40,8 +40,8 @@ FILE* openFile(const char* fileName, const char* modes)
     FILE *f = fopen(fileName,modes);
     if(f == NULL)
     {
-        //error opening sdc file, exists?
-        fprintf(stderr,"While opening '%s' file fopen() returned errno: %d\n", fileName, errno);
+        //error opening a file
+        perror(fileName);
         exit(errno);
     }
     return f;
