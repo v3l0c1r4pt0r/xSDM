@@ -1,5 +1,4 @@
 #include "xsdc.h"
-#include <stdio.h>
 
 void xorBuffer(uint8_t factor, unsigned char *buffer, uint32_t bufferSize)
 {
@@ -34,4 +33,16 @@ void *decryptData(void *buffer, uint32_t *bufferSize, void *key, uint32_t keyLen
     *bufferSize = size;
 //     printf("result: 0x%04x (%s), size: %d\n",result,result,size);
     return result;
+}
+
+FILE* openFile(const char* fileName, const char* modes)
+{
+    FILE *f = fopen(fileName,modes);
+    if(f == NULL)
+    {
+        //error opening sdc file, exists?
+        fprintf(stderr,"While opening '%s' file fopen() returned errno: %d\n", fileName, errno);
+        exit(errno);
+    }
+    return f;
 }

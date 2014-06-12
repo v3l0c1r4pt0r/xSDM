@@ -20,24 +20,12 @@ int main(int argc, char **argv)
         return -1;
     }
     int result;
-    FILE *in = fopen(sdcFile,"r");
-    if(in == NULL)
-    {
-        //error opening sdc file, exists?
-        fprintf(stderr,"While opening sdc file fopen() returned errno: %d\n",errno);
-        return errno;
-    }
+    FILE *in = openFile(sdcFile,"r");
 
     //open key file
     void *keyFileName = malloc(strlen(sdcFile)+5);
     sprintf((char*)keyFileName,"%s.key",sdcFile);
-    FILE *key = fopen((char*)keyFileName,"r");
-    if(key == NULL)
-    {
-        //error opening key file, exists?
-        fprintf(stderr,"While opening key file fopen() returned errno: %d\n",errno);
-        return errno;
-    }
+    FILE *key = openFile((char*)keyFileName,"r");
 
     //load keyFileName
     fseek(key,0,SEEK_END);
@@ -59,7 +47,6 @@ int main(int argc, char **argv)
 
     //decode header
     Header *header;// = (Header*)malloc(headerSize);
-
     unsigned char *data = (unsigned char *)malloc(headerSize);
     fread(data,1,headerSize,in);
     header = (Header*)decryptData(data, &headerSize, unpackData.headerKey, 32);
@@ -110,13 +97,7 @@ int main(int argc, char **argv)
     //open output file
     outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen(dirName)+strlen(baseName)+3);
     sprintf(outFile,"%s/%s/%s",sdcDir,dirName,baseName);
-    FILE *out = fopen(outFile, "w");
-    if(out == NULL)
-    {
-        //error opening sdc file, exists?
-        fprintf(stderr,"While creating output file fopen() returned errno: %d\n",errno);
-        return errno;
-    }
+    FILE *out = openFile(outFile,"w");
 
     //memory cleanup
     free(outFile);
