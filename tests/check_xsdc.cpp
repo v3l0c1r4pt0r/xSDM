@@ -25,10 +25,10 @@ START_TEST (test_check_decryptdata)
     };
     uint32_t targetSize = sizeof(target);
     char key[] = "IAMAKEYIAMAKEYIAMAKEYIAMAKEYIAMA";
-    void *actual = decryptData(target, &targetSize, key, 32);	//FIXME: on some systems it probably gives memory corruption
+    void *actual = decryptData(target, &targetSize, key, 32);
     char expected[] = "I am chunk of private data encrypted in a target. Can you decrypt me?";
     ck_assert_msg (strcmp((char*)actual, expected), "Fail! actual: 0x%04x (%s)",actual,actual);
-//     free(actual);
+    free(actual);
 }
 END_TEST
 

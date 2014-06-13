@@ -1,3 +1,3 @@
 AUTOMAKE_OPTIONS = foreign
-#SUBDIRS = src tests
-SUBDIRS = src
+SUBDIRS = src tests
+#SUBDIRS = src

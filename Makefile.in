@@ -280,8 +280,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
-#SUBDIRS = src tests
-SUBDIRS = src
+SUBDIRS = src tests
 all: all-recursive
 
 .SUFFIXES:
@@ -735,6 +734,7 @@ uninstall-am:
 	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
 	pdf-am ps ps-am tags tags-am uninstall uninstall-am
 
+#SUBDIRS = src
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
