@@ -47,6 +47,15 @@ START_TEST (test_check_openfile)
 }
 END_TEST
 
+START_TEST (test_check_xorbuffer)
+{
+    unsigned char buf[] = {'\x0', '\x80', '\x7f', '\xff'};
+    uint8_t factor = 0xcd;
+    xorBuffer(factor, buf, 4);
+    ck_assert_str_eq ((char*)buf, "\xcd\x4d\xb2\x32");
+}
+END_TEST
+
 Suite *
 xsdc_suite (void)
 {
@@ -57,6 +66,7 @@ xsdc_suite (void)
     tcase_add_test (tc_core, test_check_fillunpackstruct);
 //     tcase_add_test (tc_core, test_check_decryptdata);
     tcase_add_test (tc_core, test_check_openfile);
+    tcase_add_test (tc_core, test_check_xorbuffer);
     suite_add_tcase (s, tc_core);
 
     return s;
