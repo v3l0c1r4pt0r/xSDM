@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
     //fill unpack structure
     UnpackData unpackData;
-    fillUnpackStruct(&unpackData,unformatted);
+    fillUnpackStruct(&unpackData,unformatted);	//FIXME: get return value
 
     //load header size
     uint8_t *hdrSizeBuff = (uint8_t*)malloc(4);
