@@ -8,16 +8,23 @@ void xorBuffer(uint8_t factor, unsigned char *buffer, uint32_t bufferSize)
     }
 }
 
-void fillUnpackStruct(UnpackData *unpackData, void *edv)	//TODO: return int/enum and indicate wrong format
+UnpackStatus fillUnpackStruct(UnpackData *unpackData, void *edv)
 {
-    unpackData->unformatted = edv;
-    char *keyStart = strstr((char*)unpackData->unformatted,"^^")+2;
-//     unpackData->fileNameKey = malloc(0x20);
-    unpackData->fileNameKey = keyStart;
-//     unpackData->headerKey = malloc(0x20);
-    unpackData->headerKey = keyStart+0x20;
-    unpackData->checksum = strtoul((char*)unpackData->unformatted,NULL,10);
-    unpackData->xorVal = strtoul(keyStart+0x40,NULL,10);
+    UnpackData ud;
+    ud.unformatted = edv;
+    if(strlen((char*)edv)<0x44)
+      return FUS_LNG;
+    char *keyStart = strstr((char*)ud.unformatted,"^^")+2;
+    if(keyStart == NULL)
+      return FUS_NFND;
+    ud.fileNameKey = keyStart;
+    ud.headerKey = keyStart+0x20;
+    ud.checksum = strtoul((char*)ud.unformatted,NULL,10);	//FIXME: catch not a number
+    ud.xorVal = strtoul(keyStart+0x40,NULL,10);
+    
+    //ok, copy to unpackData
+    memcpy(unpackData,(void*)&ud,sizeof(UnpackData));
+    return FUS_OK;
 }
 
 void *decryptData(void *buffer, uint32_t *bufferSize, void *key, uint32_t keyLength)
