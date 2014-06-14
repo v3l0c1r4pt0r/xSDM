@@ -12,10 +12,10 @@ void fillUnpackStruct(UnpackData *unpackData, void *edv)	//TODO: return int/enum
 {
     unpackData->unformatted = edv;
     char *keyStart = strstr((char*)unpackData->unformatted,"^^")+2;
-    unpackData->fileNameKey = malloc(0x20);
-    strncpy((char*)unpackData->fileNameKey,keyStart,0x20);
-    unpackData->headerKey = malloc(0x20);
-    strncpy((char*)unpackData->headerKey,keyStart+0x20,0x20);
+//     unpackData->fileNameKey = malloc(0x20);
+    unpackData->fileNameKey = keyStart;
+//     unpackData->headerKey = malloc(0x20);
+    unpackData->headerKey = keyStart+0x20;
     unpackData->checksum = strtoul((char*)unpackData->unformatted,NULL,10);
     unpackData->xorVal = strtoul(keyStart+0x40,NULL,10);
 }
