@@ -199,7 +199,8 @@ int main(int argc, char **argv)
     output = NULL;
     free(unpackData.unformatted);
     unpackData.unformatted = NULL;
-    //FIXME: after rewriting fillUnpackStruct there should be more NULLs in it here
+    unpackData.fileNameKey = NULL;
+    unpackData.headerKey = NULL;
 
     //write sdc header to &2
     uint8_t *headerBuff = (uint8_t*)header;
