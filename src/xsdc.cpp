@@ -20,8 +20,13 @@ UnpackStatus fillUnpackStruct(UnpackData *unpackData, void *edv)
     keyStart += 2;
     ud.fileNameKey = keyStart;
     ud.headerKey = keyStart+0x20;
-    ud.checksum = strtoul((char*)ud.unformatted,NULL,10);	//FIXME: catch not a number
-    ud.xorVal = strtoul(keyStart+0x40,NULL,10);
+    char *endptr = NULL;
+    ud.checksum = strtoul((char*)ud.unformatted,&endptr,10);
+    if(ud.unformatted == endptr)
+      return FUS_NAN;
+    ud.xorVal = strtoul(keyStart+0x40,&endptr,10);
+    if(keyStart+0x40 == endptr)
+      return FUS_NAN;
     
     //ok, copy to unpackData
     memcpy(unpackData,(void*)&ud,sizeof(UnpackData));

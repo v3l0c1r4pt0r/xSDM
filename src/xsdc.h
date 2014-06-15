@@ -19,6 +19,7 @@ typedef enum
   FUS_OK = 0,	//success
   FUS_NFND,	//substring '^^' not found in edv
   FUS_LNG,	//length of a string doesn't match expected length
+  FUS_NAN,	//one of numbers wasn't number at all
   FUS_ERROR	//unidentified error
 } UnpackStatus;
 
