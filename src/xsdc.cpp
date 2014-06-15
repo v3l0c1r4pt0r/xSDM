@@ -14,9 +14,10 @@ UnpackStatus fillUnpackStruct(UnpackData *unpackData, void *edv)
     ud.unformatted = edv;
     if(strlen((char*)edv)<0x44)
       return FUS_LNG;
-    char *keyStart = strstr((char*)ud.unformatted,"^^")+2;
+    char *keyStart = strstr((char*)ud.unformatted,"^^");
     if(keyStart == NULL)
       return FUS_NFND;
+    keyStart += 2;
     ud.fileNameKey = keyStart;
     ud.headerKey = keyStart+0x20;
     ud.checksum = strtoul((char*)ud.unformatted,NULL,10);	//FIXME: catch not a number

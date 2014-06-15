@@ -36,7 +36,15 @@ int main(int argc, char **argv)
 
     //fill unpack structure
     UnpackData unpackData;
-    fillUnpackStruct(&unpackData,unformatted);	//FIXME: get return value
+    UnpackStatus us = fillUnpackStruct(&unpackData,unformatted);
+    switch(us)
+    {
+      case FUS_OK:
+	break;
+      default:
+	fprintf(stderr, "%s: Wrong format of a keyfile!\n", argv[0]);
+	return us;
+    }
 
     //load header size
     uint8_t *hdrSizeBuff = (uint8_t*)malloc(4);

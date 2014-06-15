@@ -28,7 +28,8 @@ typedef enum
 void xorBuffer(uint8_t factor, unsigned char* buffer, uint32_t bufferSize);
 
 /*
- * transforms edv in format "[int]^^[key2][key1][int]" into UnpackData struct
+ * transforms edv in format "[int]^^[key2][key1][int]" into UnpackData struct,
+ * returns FUS_OK on success and appropriate error on fail
  */
 UnpackStatus fillUnpackStruct(UnpackData* unpackData, void* edv);
 
