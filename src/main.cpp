@@ -20,13 +20,27 @@ int main(int argc, char **argv)
         return -1;
     }
     int result;
-    FILE *in = openFile(sdcFile,"r");
+    FILE *in = fopen(sdcFile,"r");
+    if(in == NULL)
+    {
+        //error opening a file
+        printf("[FAIL]\n");
+        perror(sdcFile);
+        return errno;
+    }
 
     //open key file
     void *keyFileName = malloc(strlen(sdcFile)+5);
     sprintf((char*)keyFileName,"%s.key",sdcFile);
-    FILE *key = openFile((char*)keyFileName,"r");
-    
+    FILE *key = fopen((char*)keyFileName,"r");
+    if(key == NULL)
+    {
+        //error opening a file
+        printf("[FAIL]\n");
+        perror((char*)keyFileName);
+        return errno;
+    }
+
     printf("Verifying keyfile...\t\t");
 
     //load keyFileName
@@ -43,10 +57,10 @@ int main(int argc, char **argv)
     switch(us)
     {
     case FUS_OK:
-	printf("[OK]\n");
+        printf("[OK]\n");
         break;
     default:
-	printf("[FAIL]\n");
+        printf("[FAIL]\n");
         fprintf(stderr, "%s: Wrong format of a keyfile!\n", argv[0]);
         return us;
     }
@@ -57,7 +71,7 @@ int main(int argc, char **argv)
     uint32_t headerSize = *(uint32_t*)hdrSizeBuff;
     free(hdrSizeBuff);
     hdrSizeBuff = NULL;
-    
+
     printf("Validating SDC header...\t");
 
     //load and decode header
@@ -73,14 +87,14 @@ int main(int argc, char **argv)
     long int sdcSize = ftell(in);
     if(header->compressedSize + headerSize + 4 != sdcSize)
     {
-	printf("[FAIL]\n");
-	fprintf(stderr, "%s: File given is not valid SDC file or decryption key wrong\n", argv[0]);
+        printf("[FAIL]\n");
+        fprintf(stderr, "%s: File given is not valid SDC file or decryption key wrong\n", argv[0]);
         return -1;
     }
-    
+
     printf("[OK]\n");
     printf("Checking file integrity...\t");
-    
+
     //count crc32
     void *buffer = malloc(0x1000);
     uLong crc = crc32(0L, Z_NULL, 0);
@@ -88,36 +102,36 @@ int main(int argc, char **argv)
     size_t bytes = 0;
     while((bytes = fread(buffer, 1, 0x1000, in)) != 0)
     {
-      crc = crc32(crc, (Bytef*)buffer, bytes);
-      //crc32_combine();
+        crc = crc32(crc, (Bytef*)buffer, bytes);
+        //crc32_combine();
     }
     if(flags & F_VERBOSE)
-      fprintf(stderr, "%s: crc32: 0x%08X; orig: 0x%08X\n", argv[0], crc, unpackData.checksum);
-    
+        fprintf(stderr, "%s: crc32: 0x%08X; orig: 0x%08X\n", argv[0], crc, unpackData.checksum);
+
     //check if crc is valid
     if(crc != unpackData.checksum)
     {
-	printf("[FAIL]\n");
-      fprintf(
-	stderr, "%s: CRC32 of sdc file did not match the one supplied in keyfile (0x%04X expected while have 0x%04X)\n", 
-	argv[0], unpackData.checksum, crc
-      );
-      return crc;
+        printf("[FAIL]\n");
+        fprintf(
+            stderr, "%s: CRC32 of sdc file did not match the one supplied in keyfile (0x%04X expected while have 0x%04X)\n",
+            argv[0], unpackData.checksum, crc
+        );
+        return crc;
     }
-    
+
     printf("[OK]\n");
     printf("Decoding file name...\t\t");
 
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
     data = (unsigned char*)decryptData(&header->fileName, &fnLength, unpackData.fileNameKey, 32);
-    
+
     printf("[OK]\n");
 
     if(flags & F_VERBOSE)
         fprintf(stderr,"File path: %s\n",data);
     memcpy((void*)&header->fileName,data, fnLength);
-    
+
     printf("Creating directory structure...\t");
 
     char *pointer = NULL;
@@ -152,14 +166,22 @@ int main(int argc, char **argv)
     }
     else
         closedir(f);
-    
+    f = NULL;
+
     printf("[OK]\n");
     printf("Unpacking file(s)...\t\t");
 
     //open output file
     outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen(dirName)+strlen(baseName)+3);
     sprintf(outFile,"%s/%s/%s",sdcDir,dirName,baseName);
-    FILE *out = openFile(outFile,"w");
+    FILE *out = fopen(outFile,"w");
+    if(out == NULL)
+    {
+        //error opening a file
+        printf("[FAIL]\n");
+        perror(outFile);
+        return errno;
+    }
 
     //memory cleanup
     free(outFile);
@@ -189,13 +211,13 @@ int main(int argc, char **argv)
         r = inflateInit2_(&stream,-15,ZLIB_VERSION,(int)sizeof(z_stream));
     if(r != Z_OK)
     {
-	printf("[FAIL]\n");
+        printf("[FAIL]\n");
         fprintf(stderr,"inflateInit failed with errorcode %d (%s)\n",r,stream.msg);
         return r;
     }
     //read from file
     unsigned int bytesToRead = header->compressedSize & 0x3fff;
-    unsigned char *input = (unsigned char*)malloc(bytesToRead);	
+    unsigned char *input = (unsigned char*)malloc(bytesToRead);
     unsigned char *output = (unsigned char*)malloc(0x4000);
     void *tmp = malloc(bytesToRead);
 
@@ -226,7 +248,7 @@ int main(int argc, char **argv)
         r = inflate(&stream,0);
         if(r < Z_OK)
         {
-	printf("[FAIL]\n");
+            printf("[FAIL]\n");
             fprintf(stderr,"inflate failed with errorcode %d (%s)\n",r,stream.msg);
             return r;
         }
@@ -247,9 +269,9 @@ int main(int argc, char **argv)
         memcpy(tmp,stream.next_in,stream.avail_in);
         memcpy(input,tmp,stream.avail_in);
     }
-    
+
     printf("[OK]\n");
-    
+
     free(tmp);
     tmp = NULL;
     free(input);

@@ -39,8 +39,3 @@ UnpackStatus fillUnpackStruct(UnpackData* unpackData, void* edv);
  * returns buffer with decrypted data and sets BUFFERSIZE according to its size
  */
 void *decryptData(void *buffer, uint32_t *bufferSize, void *key, uint32_t keyLength);
-
-/*
- * open file to read and handle errors
- */
-FILE *openFile(const char* fileName, const char* modes);

@@ -37,20 +37,6 @@ START_TEST (test_check_decryptdata)
 }
 END_TEST
 
-START_TEST (test_check_openfile)
-{
-    FILE *f;
-    char fName[] = "test_file";
-    f = openFile(fName,"w");
-    ck_assert_ptr_ne (f, NULL);
-    fclose(f);
-    f = openFile(fName,"r");
-    ck_assert_ptr_ne (f, NULL);
-    fclose(f);
-    remove(fName);
-}
-END_TEST
-
 START_TEST (test_check_xorbuffer)
 {
     unsigned char buf[] = {'\x0', '\x80', '\x7f', '\xff'};
@@ -69,7 +55,6 @@ xsdc_suite (void)
     TCase *tc_core = tcase_create ("Core");
     tcase_add_test (tc_core, test_check_fillunpackstruct);
 //     tcase_add_test (tc_core, test_check_decryptdata);
-    tcase_add_test (tc_core, test_check_openfile);
     tcase_add_test (tc_core, test_check_xorbuffer);
     suite_add_tcase (s, tc_core);
 

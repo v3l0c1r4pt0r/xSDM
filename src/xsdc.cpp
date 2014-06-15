@@ -47,15 +47,3 @@ void *decryptData(void *buffer, uint32_t *bufferSize, void *key, uint32_t keyLen
 //     printf("result: 0x%04x (%s), size: %d\n",result,result,size);
     return result;
 }
-
-FILE* openFile(const char* fileName, const char* modes)
-{
-    FILE *f = fopen(fileName,modes);
-    if(f == NULL)
-    {
-        //error opening a file
-        perror(fileName);
-        exit(errno);
-    }
-    return f;
-}
