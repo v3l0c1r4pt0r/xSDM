@@ -183,7 +183,7 @@ int main(int argc, char **argv)
     if(header->headerSignature == moreThan4gb)
         r = inflateInit(&stream);
     else
-        r = inflateInit2_(&stream,-15,ZLIB_VERSION,(int)sizeof(z_stream));//NOTE: should be "1.2.2",0x38, or maybe not?
+        r = inflateInit2_(&stream,-15,ZLIB_VERSION,(int)sizeof(z_stream));
     if(r != Z_OK)
     {
         fprintf(stderr,"inflateInit failed with errorcode %d (%s)\n",r,stream.msg);
@@ -191,8 +191,8 @@ int main(int argc, char **argv)
     }
     //read from file
     unsigned int bytesToRead = header->compressedSize & 0x3fff;
-    unsigned char *input = (unsigned char*)malloc(bytesToRead);	//NOTE: probably a bit different number
-    unsigned char *output = (unsigned char*)malloc(0x4000);		//exactly
+    unsigned char *input = (unsigned char*)malloc(bytesToRead);	
+    unsigned char *output = (unsigned char*)malloc(0x4000);
     void *tmp = malloc(bytesToRead);
 
     //determine file size
@@ -267,7 +267,6 @@ int main(int argc, char **argv)
             fprintf(stderr,"0x%02X ",headerBuff[i]);
         }
         fprintf(stderr,"\n");
-//     fprintf(stderr,"crc32(0)=0x%lX\n",crc32(0,0,0));
     }
 
     fclose(in);
@@ -279,6 +278,5 @@ int main(int argc, char **argv)
  * Roadmap:
  * * split into functions
  * - write possibility to extract more than one file
- * - unit tests
  */
 
