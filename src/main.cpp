@@ -278,5 +278,6 @@ int main(int argc, char **argv)
  * Roadmap:
  * * split into functions
  * - write possibility to extract more than one file
+ * - convert to C (libgcrypt)
  */
 
