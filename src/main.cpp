@@ -46,6 +46,7 @@ int main(int argc, char **argv)
 	printf("[OK]\n");
         break;
     default:
+	printf("[FAIL]\n");
         fprintf(stderr, "%s: Wrong format of a keyfile!\n", argv[0]);
         return us;
     }
@@ -72,6 +73,7 @@ int main(int argc, char **argv)
     long int sdcSize = ftell(in);
     if(header->compressedSize + headerSize + 4 != sdcSize)
     {
+	printf("[FAIL]\n");
 	fprintf(stderr, "%s: File given is not valid SDC file or decryption key wrong\n", argv[0]);
         return -1;
     }
@@ -95,6 +97,7 @@ int main(int argc, char **argv)
     //check if crc is valid
     if(crc != unpackData.checksum)
     {
+	printf("[FAIL]\n");
       fprintf(
 	stderr, "%s: CRC32 of sdc file did not match the one supplied in keyfile (0x%04X expected while have 0x%04X)\n", 
 	argv[0], unpackData.checksum, crc
@@ -186,6 +189,7 @@ int main(int argc, char **argv)
         r = inflateInit2_(&stream,-15,ZLIB_VERSION,(int)sizeof(z_stream));
     if(r != Z_OK)
     {
+	printf("[FAIL]\n");
         fprintf(stderr,"inflateInit failed with errorcode %d (%s)\n",r,stream.msg);
         return r;
     }
@@ -222,6 +226,7 @@ int main(int argc, char **argv)
         r = inflate(&stream,0);
         if(r < Z_OK)
         {
+	printf("[FAIL]\n");
             fprintf(stderr,"inflate failed with errorcode %d (%s)\n",r,stream.msg);
             return r;
         }
