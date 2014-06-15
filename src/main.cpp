@@ -33,6 +33,7 @@ int main(int argc, char **argv)
     fseek(key,0,SEEK_SET);
     void *unformatted = malloc(unformattedLength);
     fread(unformatted,1,unformattedLength,key);
+    fclose(key);
 
     //fill unpack structure
     UnpackData unpackData;
