@@ -70,6 +70,29 @@ int main(int argc, char **argv)
 	fprintf(stderr, "%s: File given is not valid SDC file or decryption key wrong\n", argv[0]);
         return -1;
     }
+    
+    //count crc32
+    void *buffer = malloc(0x1000);
+    uLong crc = crc32(0L, Z_NULL, 0);
+    fseek(in, headerSize+4, SEEK_SET);
+    size_t bytes = 0;
+    while((bytes = fread(buffer, 1, 0x1000, in)) != 0)
+    {
+      crc = crc32(crc, (Bytef*)buffer, bytes);
+      //crc32_combine();
+    }
+    if(flags & F_VERBOSE)
+      fprintf(stderr, "%s: crc32: 0x%08X; orig: 0x%08X\n", argv[0], crc, unpackData.checksum);
+    
+    //check if crc is valid
+    if(crc != unpackData.checksum)
+    {
+      fprintf(
+	stderr, "%s: CRC32 of sdc file did not match the one supplied in keyfile (0x%04X expected while have 0x%04X)\n", 
+	argv[0], unpackData.checksum, crc
+      );
+      return crc;
+    }
 
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
@@ -234,7 +257,6 @@ int main(int argc, char **argv)
 /*
  * Roadmap:
  * * split into functions
- * - check CRC
  * - write possibility to extract more than one file
  * - unit tests
  */
