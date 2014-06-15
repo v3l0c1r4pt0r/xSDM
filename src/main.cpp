@@ -40,11 +40,11 @@ int main(int argc, char **argv)
     UnpackStatus us = fillUnpackStruct(&unpackData,unformatted);
     switch(us)
     {
-      case FUS_OK:
-	break;
-      default:
-	fprintf(stderr, "%s: Wrong format of a keyfile!\n", argv[0]);
-	return us;
+    case FUS_OK:
+        break;
+    default:
+        fprintf(stderr, "%s: Wrong format of a keyfile!\n", argv[0]);
+        return us;
     }
 
     //load header size
@@ -54,13 +54,22 @@ int main(int argc, char **argv)
     free(hdrSizeBuff);
     hdrSizeBuff = NULL;
 
-    //decode header
+    //load and decode header
     Header *header;// = (Header*)malloc(headerSize);
     unsigned char *data = (unsigned char *)malloc(headerSize);
     fread(data,1,headerSize,in);
     header = (Header*)decryptData(data, &headerSize, unpackData.headerKey, 32);
     free(data);
     data = NULL;
+
+    //check if valid sdc file
+    fseek(in,0,SEEK_END);
+    long int sdcSize = ftell(in);
+    if(header->compressedSize + headerSize + 4 != sdcSize)
+    {
+	fprintf(stderr, "%s: File given is not valid SDC file or decryption key wrong\n", argv[0]);
+        return -1;
+    }
 
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
@@ -229,3 +238,4 @@ int main(int argc, char **argv)
  * - write possibility to extract more than one file
  * - unit tests
  */
+
