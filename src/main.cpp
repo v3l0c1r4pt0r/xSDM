@@ -26,6 +26,8 @@ int main(int argc, char **argv)
     void *keyFileName = malloc(strlen(sdcFile)+5);
     sprintf((char*)keyFileName,"%s.key",sdcFile);
     FILE *key = openFile((char*)keyFileName,"r");
+    
+    printf("Verifying keyfile...\t\t");
 
     //load keyFileName
     fseek(key,0,SEEK_END);
@@ -41,6 +43,7 @@ int main(int argc, char **argv)
     switch(us)
     {
     case FUS_OK:
+	printf("[OK]\n");
         break;
     default:
         fprintf(stderr, "%s: Wrong format of a keyfile!\n", argv[0]);
@@ -53,6 +56,8 @@ int main(int argc, char **argv)
     uint32_t headerSize = *(uint32_t*)hdrSizeBuff;
     free(hdrSizeBuff);
     hdrSizeBuff = NULL;
+    
+    printf("Validating SDC header...\t");
 
     //load and decode header
     Header *header;// = (Header*)malloc(headerSize);
@@ -70,6 +75,9 @@ int main(int argc, char **argv)
 	fprintf(stderr, "%s: File given is not valid SDC file or decryption key wrong\n", argv[0]);
         return -1;
     }
+    
+    printf("[OK]\n");
+    printf("Checking file integrity...\t");
     
     //count crc32
     void *buffer = malloc(0x1000);
@@ -93,14 +101,21 @@ int main(int argc, char **argv)
       );
       return crc;
     }
+    
+    printf("[OK]\n");
+    printf("Decoding file name...\t\t");
 
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
     data = (unsigned char*)decryptData(&header->fileName, &fnLength, unpackData.fileNameKey, 32);
+    
+    printf("[OK]\n");
 
     if(flags & F_VERBOSE)
         fprintf(stderr,"File path: %s\n",data);
     memcpy((void*)&header->fileName,data, fnLength);
+    
+    printf("Creating directory structure...\t");
 
     char *pointer = NULL;
     while((pointer = strstr((char*)&header->fileName,"\\")) != NULL)
@@ -128,12 +143,15 @@ int main(int argc, char **argv)
         if(mkdir(outFile,S_IRWXU | S_IRWXG | S_IROTH | S_IWOTH | S_IXOTH) != 0)
         {
             //mkdir failed
-            fprintf(stderr,"Directory '%s' creation failed with errno: %d\n",outFile,errno);
+            fprintf(stderr,"%s: Directory '%s' creation failed with errno: %d\n",argv[0], outFile,errno);
             return errno;
         }
     }
     else
         closedir(f);
+    
+    printf("[OK]\n");
+    printf("Unpacking file(s)...\t\t");
 
     //open output file
     outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen(dirName)+strlen(baseName)+3);
@@ -224,6 +242,9 @@ int main(int argc, char **argv)
         memcpy(tmp,stream.next_in,stream.avail_in);
         memcpy(input,tmp,stream.avail_in);
     }
+    
+    printf("[OK]\n");
+    
     free(tmp);
     tmp = NULL;
     free(input);
