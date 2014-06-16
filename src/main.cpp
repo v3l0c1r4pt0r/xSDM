@@ -300,11 +300,3 @@ int main(int argc, char **argv)
     fclose(out);
     return 0;
 }
-
-/*
- * Roadmap:
- * * split into functions
- * - write possibility to extract more than one file
- * - convert to C (libgcrypt)
- */
-
