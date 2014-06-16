@@ -90,8 +90,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_xsdm_OBJECTS = main.$(OBJEXT) xsdc.$(OBJEXT) \
-	bfsh-con/blowfish.$(OBJEXT)
+am_xsdm_OBJECTS = xsdc.$(OBJEXT) bfsh-con/blowfish.$(OBJEXT)
 xsdm_OBJECTS = $(am_xsdm_OBJECTS)
 xsdm_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -245,7 +244,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = -Wall
 AM_LDFLAGS = 
-xsdm_SOURCES = main.cpp xsdc.cpp bfsh-con/blowfish.cpp
+xsdm_SOURCES = xsdc.cpp bfsh-con/blowfish.cpp
 all: all-am
 
 .SUFFIXES:
@@ -342,7 +341,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xsdc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bfsh-con/$(DEPDIR)/blowfish.Po@am__quote@
 

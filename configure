@@ -582,7 +582,7 @@ PACKAGE_STRING='xsdm 0.1.3'
 PACKAGE_BUGREPORT=''
 PACKAGE_URL=''
 
-ac_unique_file="src/main.h"
+ac_unique_file="src/xsdc.h"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
