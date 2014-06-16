@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.62])
 AC_INIT([xsdm], [0.1.3])
-AC_CONFIG_SRCDIR([src/xsdc.h])
+AC_CONFIG_SRCDIR([src/main.h])
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_OUTPUT(Makefile src/Makefile tests/Makefile)
 # AC_CONFIG_HEADERS([config.h])

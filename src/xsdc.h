@@ -4,10 +4,6 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <stdio.h>
-#include <zlib.h>
-#include <libgen.h>
-#include <sys/stat.h>
-#include <dirent.h>
 
 #define moreThan4gb	0xd1
 
