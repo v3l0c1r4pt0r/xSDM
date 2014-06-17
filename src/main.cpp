@@ -75,10 +75,10 @@ int main(int argc, char **argv)
     printf("Validating SDC header...\t");
 
     //load and decode header
-    Header *header;// = (Header*)malloc(headerSize);
+    Header *header = (Header*)malloc(headerSize);
     unsigned char *data = (unsigned char *)malloc(headerSize);
     fread(data,1,headerSize,in);
-    header = (Header*)decryptData(data, &headerSize, unpackData.headerKey, 32);
+    decryptData(data, &headerSize, header, unpackData.headerKey, 32);
     free(data);
     data = NULL;
 
@@ -124,7 +124,8 @@ int main(int argc, char **argv)
 
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
-    data = (unsigned char*)decryptData(&header->fileName, &fnLength, unpackData.fileNameKey, 32);
+    data = (unsigned char*)malloc(getDataOutputSize(header->fileNameLength));
+    decryptData(&header->fileName, &fnLength, data, unpackData.fileNameKey, 32);
 
     printf("[OK]\n");
 
@@ -140,9 +141,9 @@ int main(int argc, char **argv)
         pointer[0] = '/';
     }
 
-    char *dirName = (char*)malloc(header->fileNameLength);
-    strncpy(dirName,(char*)&header->fileName+1,header->fileNameLength);
-    dirName = dirname(dirName);
+    void *dirName = (void*)malloc(header->fileNameLength);
+    strncpy((char*)dirName,(char*)&header->fileName+1,header->fileNameLength);
+    dirName = dirname((char*)dirName);
 
     char *baseName = basename((char*)&header->fileName);
 
@@ -152,7 +153,7 @@ int main(int argc, char **argv)
     sdcDir = dirname(sdcDir);
 
     //create directory according to header
-    char *outFile = (char*)malloc(strlen(sdcDir)+strlen(dirName)+2);
+    char *outFile = (char*)malloc(strlen(sdcDir)+strlen((char*)dirName)+2);
     sprintf(outFile,"%s/%s",sdcDir,dirName);
     DIR *f = NULL;
     if((f = opendir(outFile)) == NULL)
@@ -172,7 +173,7 @@ int main(int argc, char **argv)
     printf("Unpacking file(s)...\t\t");
 
     //open output file
-    outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen(dirName)+strlen(baseName)+3);
+    outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen((char*)dirName)+strlen(baseName)+3);
     sprintf(outFile,"%s/%s/%s",sdcDir,dirName,baseName);
     FILE *out = fopen(outFile,"w");
     if(out == NULL)

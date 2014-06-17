@@ -77,4 +77,9 @@ UnpackStatus fillUnpackStruct(UnpackData* unpackData, void* edv);
  * decrypts data from BUFFER of BUFFERSIZE size in bytes using KEY of length of KEYLENGTH,
  * returns buffer with decrypted data and sets BUFFERSIZE according to its size
  */
-void *decryptData(void *buffer, uint32_t *bufferSize, void *key, uint32_t keyLength);
+void decryptData(void* buffer, uint32_t* bufferSize, void* outputBuffer, void* key, uint32_t keyLength);
+
+/*
+ * get number of bytes that need to be allocated for decryptData's output buffer
+ */
+uint32_t getDataOutputSize(uint32_t inputSize);
