@@ -13,8 +13,8 @@
 typedef struct __attribute__ ((__packed__)) header_t
 {
   uint32_t	headerSignature;
-  uint32_t	unknown1;
-  uint32_t	entryCount;
+  uint32_t	xorParam;
+  uint32_t	headerSize;
   uint8_t	unknown2[0x20];
   uint32_t	compressedSize;
   uint32_t	fileSize;
@@ -27,8 +27,8 @@ typedef struct __attribute__ ((__packed__)) header_t
 typedef struct __attribute__ ((__packed__)) header_4gb_t
 {
   uint32_t	headerSignature;
-  uint32_t	unknown1;
-  uint32_t	entryCount;
+  uint32_t	xorParam;
+  uint32_t	headerSize;
   uint8_t	unknown2[0x20];
   uint64_t	compressedSize;
   uint32_t	fileSize;

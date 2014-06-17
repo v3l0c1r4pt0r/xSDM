@@ -21,7 +21,7 @@ END_TEST
 
 START_TEST (test_check_decryptdata)
 {
-    char target[] = {
+    unsigned char target[] = {
         0x42, 0x3F, 0x3B, 0x95, 0x72, 0x23, 0x86, 0xF1, 0x08, 0xB3, 0x09, 0xC5, 0x23, 0x59, 0x89, 0x04,
         0x87, 0x02, 0x17, 0x16, 0x50, 0x03, 0xA0, 0x50, 0x6C, 0xD3, 0x71, 0x09, 0x17, 0x80, 0xB3, 0x9F,
         0x32, 0xB1, 0x36, 0xAC, 0x71, 0xFC, 0xDF, 0xC4, 0x58, 0x92, 0xBF, 0xC6, 0x48, 0xD5, 0x2C, 0x35,
@@ -30,7 +30,7 @@ START_TEST (test_check_decryptdata)
     };
     uint32_t targetSize = sizeof(target);
     char key[] = "IAMAKEYIAMAKEYIAMAKEYIAMAKEYIAMA";
-    void *actual = decryptData(&target, &targetSize, key, 32);	//FIXME: fail with memory corruption @ 0x605810
+    void *actual = decryptData(target, &targetSize, key, 32);	//FIXME: fail with memory corruption @ 0x605810
     printf("%s\n",actual);
     char expected[] = "I am chunk of private data encrypted in a target. Can you decrypt me?";
     ck_assert_msg (strcmp((char*)actual, expected), "Fail! actual: 0x%04x (%s)",actual,actual);
