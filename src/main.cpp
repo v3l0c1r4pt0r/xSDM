@@ -141,7 +141,7 @@ int main(int argc, char **argv)
         pointer[0] = '/';
     }
 
-    void *dirName = (void*)malloc(header->fileNameLength);
+    void *dirName = malloc(header->fileNameLength);
     strncpy((char*)dirName,(char*)&header->fileName+1,header->fileNameLength);
     dirName = dirname((char*)dirName);
 
