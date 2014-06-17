@@ -30,7 +30,8 @@ START_TEST (test_check_decryptdata)
     };
     uint32_t targetSize = sizeof(target);
     char key[] = "IAMAKEYIAMAKEYIAMAKEYIAMAKEYIAMA";
-    void *actual = decryptData(target, &targetSize, key, 32);	//FIXME: fail with memory corruption @ 0x605810
+    void *actual = malloc(getDataOutputSize(targetSize));
+    decryptData(target, &targetSize, actual, key, 32);	//FIXME: fail with memory corruption @ 0x605810
     printf("%s\n",actual);
     char expected[] = "I am chunk of private data encrypted in a target. Can you decrypt me?";
     ck_assert_msg (strcmp((char*)actual, expected), "Fail! actual: 0x%04x (%s)",actual,actual);
