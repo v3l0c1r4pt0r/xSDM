@@ -1,3 +1,6 @@
 * split into functions
 - write possibility to extract more than one file
 - convert to C (libgcrypt)
+- fix following warning's reason:
+    configure: WARNING: AM_PATH_CHECK() is deprecated
+    configure: WARNING: use PKG_CHECK_MODULES([CHECK], [check >= 0.9.4]) instead
