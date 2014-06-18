@@ -288,7 +288,7 @@ int main(int argc, char **argv)
         * tricky part: input buffer hadn't been fully decompressed
         * so we need to copy the rest to TMP and then at the beginning
         * of input buffer so it can be inflated, but before that we need to
-        * read the rest of a chunk so its size would be STRANGESIZE
+        * read the rest of a chunk so its size would be COMPRESSEDSIZE
         */
         memcpy(tmp,stream.next_in,stream.avail_in);
         memcpy(input,tmp,stream.avail_in);
