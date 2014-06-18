@@ -8,9 +8,7 @@ AM_INIT_AUTOMAKE([subdir-objects])
 AC_OUTPUT(Makefile src/Makefile tests/Makefile)
 # AC_CONFIG_HEADERS([config.h])
 #the following line not always work
-AM_PATH_CHECK([0.9.4], [], [
-         echo "Check is required for this program"
-         exit -1])
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 
 # Checks for programs.
 AC_PROG_CXX
