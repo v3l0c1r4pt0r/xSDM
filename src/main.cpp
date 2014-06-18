@@ -93,6 +93,29 @@ int main(int argc, char **argv)
     }
 
     printf("[OK]\n");
+
+    //check if number of files might be more than one
+    if(header->headerSize > 1)
+    {
+        fprintf(stderr,
+                "%%DEBUG_START%%\nedv: '%s'\nheader:", unpackData.unformatted
+               );
+        uint8_t *headerBuff = (uint8_t*)header;
+        for(int i = 0; i < 0x200; i++)
+        {
+            if(i%8==0)
+                fprintf(stderr,"\n%04X:\t",i);
+            fprintf(stderr,"0x%02X ",headerBuff[i]);
+        }
+        fprintf(stderr,
+		"\n%%DEBUG_END%%\n%s: Warning! You have encountered cabinet with more than one file inside. This is known problem since"
+		" the program is now able to unpack only first.\n Please help improving the program by opening issue on github and paste"
+		" above debug information. Thank you.\n",
+		argv[0]
+	       );
+
+    }
+
     printf("Checking file integrity...\t");
 
     //count crc32
