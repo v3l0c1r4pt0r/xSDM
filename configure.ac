@@ -7,7 +7,6 @@ AC_CONFIG_SRCDIR([src/main.h])
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_OUTPUT(Makefile src/Makefile tests/Makefile)
 # AC_CONFIG_HEADERS([config.h])
-#the following line not always work
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 
 # Checks for programs.
@@ -15,8 +14,12 @@ AC_PROG_CXX
 AC_PROG_CC
 
 # Checks for libraries.
-AC_CHECK_LIB([z], [inflate], [],[
+AC_CHECK_LIB([z], [inflate],, [
          echo "Zlib is required for this program"
+         exit -1])
+
+AC_CHECK_LIB([gcrypt], [gcry_check_version],, [
+         echo "Libgcrypt is required for this program"
          exit -1])
 
 # Checks for header files.
