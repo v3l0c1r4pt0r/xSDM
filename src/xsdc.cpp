@@ -72,7 +72,7 @@ void decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, void *k
 
     if (err)
     {
-        fprintf (stderr, "Failure: %s/%s\n",
+        fprintf (stderr, "%s failed with message: \"%s\"\n",
                  gcry_strsource (err),
                  gcry_strerror (err));
     }
@@ -84,7 +84,7 @@ void decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, void *k
 
     if (err)
     {
-        fprintf (stderr, "Failure: %s/%s\n",
+        fprintf (stderr, "%s failed with message: \"%s\"\n",
                  gcry_strsource (err),
                  gcry_strerror (err));
     }
