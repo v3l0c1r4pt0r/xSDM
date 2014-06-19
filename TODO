@@ -2,3 +2,4 @@
 - write possibility to extract more than one file
 - convert to C (libgcrypt)
 - allow user to force process in case of wrong checksum
+- getopt
