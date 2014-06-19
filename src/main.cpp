@@ -47,8 +47,9 @@ int main(int argc, char **argv)
     fseek(key,0,SEEK_END);
     int unformattedLength = ftell(key);
     fseek(key,0,SEEK_SET);
-    void *unformatted = malloc(unformattedLength);
+    void *unformatted = malloc(unformattedLength+1);
     fread(unformatted,1,unformattedLength,key);
+    ((unsigned char *)unformatted)[unformattedLength] = '\0';
     fclose(key);
 
     //fill unpack structure
@@ -76,11 +77,7 @@ int main(int argc, char **argv)
 
     //load and decode header
     Header *header = (Header*)malloc(headerSize);
-    unsigned char *data = (unsigned char *)malloc(headerSize);
-    fread(data,1,headerSize,in);
-    decryptData(data, &headerSize, header, unpackData.headerKey, 32);
-    free(data);
-    data = NULL;
+    loadHeader(in, header, headerSize, &unpackData);
 
     //check if valid sdc file
     fseek(in,0,SEEK_END);
@@ -139,7 +136,7 @@ int main(int argc, char **argv)
 
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
-    data = (unsigned char*)malloc(getDataOutputSize(header->fileNameLength));
+    unsigned char *data = (unsigned char*)malloc(getDataOutputSize(header->fileNameLength));
     decryptData(&header->fileName, &fnLength, data, unpackData.fileNameKey, 32);
 
     printf("[OK]\n");

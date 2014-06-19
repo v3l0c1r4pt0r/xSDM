@@ -72,3 +72,11 @@ ulong countCrc(FILE *f, uint32_t hdrSize)
     free(buffer);
     return crc;
 }
+
+void loadHeader(FILE *f, Header *hdr, uint32_t hdrSize, UnpackData *ud)
+{
+    unsigned char *data = (unsigned char *)malloc(hdrSize);
+    fread(data,1,hdrSize,f);
+    decryptData(data, &hdrSize, hdr, ud->headerKey, 32);
+    free(data);
+}
