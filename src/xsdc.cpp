@@ -46,17 +46,53 @@ uint32_t getDataOutputSize(uint32_t inputSize)
 
 void decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, void *key, uint32_t keyLength)
 {
-//     printf("buffer: 0x%04x (%s)\n",buffer,buffer);
-//     printf("key: 0x%04x (%s)\n",key,key);
-    CBlowFish *cbf1 = new CBlowFish();
-    cbf1->Initialize((unsigned char *)key,32);
-    uint32_t size = cbf1->GetOutputLength(*bufferSize);
+//     CBlowFish *cbf1 = new CBlowFish();
+//     cbf1->Initialize((unsigned char *)key,32);
+//     uint32_t size = cbf1->GetOutputLength(*bufferSize);
 //     void *result = malloc(size);
-    cbf1->Decode((unsigned char*)buffer, (unsigned char*)outputBuffer, *bufferSize);
+//     cbf1->Decode((unsigned char*)buffer, (unsigned char*)outputBuffer, *bufferSize);
 //     delete cbf1;
-    *bufferSize = size;
-//     printf("result: 0x%04x (%s), size: %d\n",result,result,size);
-//     return result;
+//     *bufferSize = size;
+    //initialize cipher handle
+    gcry_check_version ("1.6.1");
+    gcry_cipher_hd_t bfish;
+    gcry_error_t err = 0;
+    err = gcry_cipher_open (&bfish, GCRY_CIPHER_BLOWFISH, GCRY_CIPHER_MODE_ECB, 0);
+    
+    if (err)
+    {
+        fprintf (stderr, "%s failed with message: \"%s\"\n",
+                 gcry_strsource (err),
+                 gcry_strerror (err));
+    }
+    
+    //set the key
+    err = gcry_cipher_setkey (bfish,
+                              key, keyLength);	//FIXME: uses 16-byte key but we need 32 bytes
+
+    if (err)
+    {
+        fprintf (stderr, "Failure: %s/%s\n",
+                 gcry_strsource (err),
+                 gcry_strerror (err));
+    }
+
+    //decrypt
+    err = gcry_cipher_decrypt (bfish,
+                               outputBuffer, getDataOutputSize(*bufferSize), buffer,
+                               *bufferSize);
+
+    if (err)
+    {
+        fprintf (stderr, "Failure: %s/%s\n",
+                 gcry_strsource (err),
+                 gcry_strerror (err));
+    }
+    
+    printf("%s\n", outputBuffer);
+
+    //close cipher handle
+    gcry_cipher_close (bfish);
 }
 
 ulong countCrc(FILE *f, uint32_t hdrSize)

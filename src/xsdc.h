@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <zlib.h>
+#include <gcrypt.h>
 
 #define moreThan4gb	0xd1
 
