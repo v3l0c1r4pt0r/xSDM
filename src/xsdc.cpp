@@ -46,17 +46,12 @@ uint32_t getDataOutputSize(uint32_t inputSize)
 
 void decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, void *key, uint32_t keyLength)
 {
-//     printf("buffer: 0x%04x (%s)\n",buffer,buffer);
-//     printf("key: 0x%04x (%s)\n",key,key);
     CBlowFish *cbf1 = new CBlowFish();
     cbf1->Initialize((unsigned char *)key,32);
     uint32_t size = cbf1->GetOutputLength(*bufferSize);
-//     void *result = malloc(size);
     cbf1->Decode((unsigned char*)buffer, (unsigned char*)outputBuffer, *bufferSize);
-//     delete cbf1;
+    delete cbf1;
     *bufferSize = size;
-//     printf("result: 0x%04x (%s), size: %d\n",result,result,size);
-//     return result;
 }
 
 ulong countCrc(FILE *f, uint32_t hdrSize)
