@@ -8,10 +8,7 @@ AM_INIT_AUTOMAKE([subdir-objects])
 AC_OUTPUT(Makefile src/Makefile tests/Makefile)
 # AC_CONFIG_HEADERS([config.h])
 #the following line not always work
-#PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
-
-CHECK_CFLAGS = -pthread 
-CHECK_LIBS = -lcheck 
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 
 # Checks for programs.
 AC_PROG_CXX

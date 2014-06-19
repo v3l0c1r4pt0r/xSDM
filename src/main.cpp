@@ -119,15 +119,7 @@ int main(int argc, char **argv)
     printf("Checking file integrity...\t");
 
     //count crc32
-    void *buffer = malloc(0x1000);
-    uLong crc = crc32(0L, Z_NULL, 0);
-    fseek(in, headerSize+4, SEEK_SET);
-    size_t bytes = 0;
-    while((bytes = fread(buffer, 1, 0x1000, in)) != 0)
-    {
-        crc = crc32(crc, (Bytef*)buffer, bytes);
-        //crc32_combine();
-    }
+    uLong crc = countCrc(in, headerSize);
     if(flags & F_VERBOSE)
         fprintf(stderr, "%s: crc32: 0x%08X; orig: 0x%08X\n", argv[0], crc, unpackData.checksum);
 

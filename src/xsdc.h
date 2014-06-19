@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <stdio.h>
+#include <zlib.h>
 
 #define moreThan4gb	0xd1
 
@@ -83,3 +84,8 @@ void decryptData(void* buffer, uint32_t* bufferSize, void* outputBuffer, void* k
  * get number of bytes that need to be allocated for decryptData's output buffer
  */
 uint32_t getDataOutputSize(uint32_t inputSize);
+
+/*
+ * count and return crc of sdc file's data area
+ */
+ulong countCrc(FILE *f, uint32_t hdrSize);

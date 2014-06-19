@@ -58,3 +58,17 @@ void decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, void *k
 //     printf("result: 0x%04x (%s), size: %d\n",result,result,size);
 //     return result;
 }
+
+ulong countCrc(FILE *f, uint32_t hdrSize)
+{
+    void *buffer = malloc(0x1000);
+    uLong crc = crc32(0L, Z_NULL, 0);
+    fseek(f, hdrSize+4, SEEK_SET);
+    size_t bytes = 0;
+    while((bytes = fread(buffer, 1, 0x1000, f)) != 0)
+    {
+        crc = crc32(crc, (Bytef*)buffer, bytes);
+    }
+    free(buffer);
+    return crc;
+}
