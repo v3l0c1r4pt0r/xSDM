@@ -4,6 +4,7 @@ int main(int argc, char **argv)
 {
     uint8_t flags = 0;
     const char *sdcFile = NULL;
+    FILE *statusStream = stdout;
     if(argc == 2)
     {
         flags &= ~F_VERBOSE;
@@ -20,14 +21,16 @@ int main(int argc, char **argv)
         return -1;
     }
     int result;
+    fprintf(statusStream, "Opening SDC file...\t\t");
     FILE *in = fopen(sdcFile,"r");
     if(in == NULL)
     {
         //error opening a file
-        printf("[FAIL]\n");
+        fprintf(statusStream, "[FAIL]\n");
         perror(sdcFile);
         return errno;
     }
+    fprintf(statusStream, "[OK]\n");
 
     //open key file
     void *keyFileName = malloc(strlen(sdcFile)+5);
