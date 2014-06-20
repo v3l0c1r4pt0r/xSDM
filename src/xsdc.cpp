@@ -55,17 +55,14 @@ DecrError decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, vo
 //     *bufferSize = size;
     //open encryption desciptor
     int err = 0;
-    MCRYPT td = mcrypt_module_open( "blowfish", NULL, "ecb", NULL);
+    MCRYPT td = mcrypt_module_open("blowfish-compat", NULL, "ecb", NULL);
     if(td == MCRYPT_FAILED)
     {
         return DD_AO;
     }
-    
-    int klen = mcrypt_enc_get_key_size( td);
-    printf("Max keylength: %d, keylength: %d\n",klen,keyLength);
 
     //set decryption key
-    err = mcrypt_generic_init( td, key, keyLength, NULL);
+    err = mcrypt_generic_init(td, key, keyLength, NULL);
     if(err < 0)
     {
         return DD_IE;
@@ -73,19 +70,25 @@ DecrError decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, vo
 
     //decrypt
     memcpy(outputBuffer, buffer, *bufferSize);
-    err = mdecrypt_generic( td, outputBuffer, getDataOutputSize(*bufferSize));
-    if(err != 0)
+    int offset = 0;
+    int blockSize = mcrypt_enc_get_block_size(td);
+    while(offset<=*bufferSize)
     {
-        return DD_DE;
+        err = mdecrypt_generic(td, outputBuffer + offset, blockSize);
+        if(err != 0)
+        {
+            return DD_DE;
+        }
+        offset += blockSize;
     }
 
     //close descriptor
-    err = mcrypt_generic_deinit( td);
+    err = mcrypt_generic_deinit(td);
     if(err < 0)
     {
         return DD_DIE;
     }
-    err = mcrypt_module_close( td);
+    err = mcrypt_module_close(td);
 
     return DD_OK;
 }
