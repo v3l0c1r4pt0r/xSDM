@@ -9,3 +9,6 @@
 #include <libgen.h>
 #include <sys/stat.h>
 #include <dirent.h>
+
+//flags
+#define F_VERBOSE	0x01
