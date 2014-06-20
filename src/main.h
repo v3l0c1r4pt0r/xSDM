@@ -12,3 +12,5 @@
 
 //flags
 #define F_VERBOSE	0x01
+#define F_FORCE		0x02
+#define F_STDIO		0x04
