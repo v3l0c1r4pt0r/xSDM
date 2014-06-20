@@ -111,7 +111,6 @@ int main(int argc, char **argv)
                 " above debug information. Thank you.\n",
                 argv[0]
                );
-
     }
 
     printf("Checking file integrity...\t");
@@ -137,7 +136,7 @@ int main(int argc, char **argv)
 
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
-    unsigned char *data = (unsigned char*)malloc(getDataOutputSize(header->fileNameLength));
+    unsigned char *data = (unsigned char*)malloc(getDataOutputSize(header->fileNameLength) + 1);
     decryptData(&header->fileName, &fnLength, data, unpackData.fileNameKey, 32);
 
     printf("[OK]\n");

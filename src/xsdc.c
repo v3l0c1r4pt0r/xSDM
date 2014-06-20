@@ -63,6 +63,7 @@ DecrError decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, vo
     }
 
     //decrypt
+    *bufferSize = getDataOutputSize(*bufferSize);
     memcpy(outputBuffer, buffer, *bufferSize);
     int offset = 0;
     int blockSize = mcrypt_enc_get_block_size(td);
