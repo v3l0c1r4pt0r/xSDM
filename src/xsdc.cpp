@@ -53,46 +53,7 @@ void decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, void *k
 //     cbf1->Decode((unsigned char*)buffer, (unsigned char*)outputBuffer, *bufferSize);
 //     delete cbf1;
 //     *bufferSize = size;
-    //initialize cipher handle
-    gcry_check_version ("1.6.1");
-    gcry_cipher_hd_t bfish;
-    gcry_error_t err = 0;
-    err = gcry_cipher_open (&bfish, GCRY_CIPHER_BLOWFISH, GCRY_CIPHER_MODE_ECB, 0);
-    
-    if (err)
-    {
-        fprintf (stderr, "%s failed with message: \"%s\"\n",
-                 gcry_strsource (err),
-                 gcry_strerror (err));
-    }
-    
-    //set the key
-    err = gcry_cipher_setkey (bfish,
-                              key, keyLength);	//FIXME: uses 16-byte key but we need 32 bytes
-
-    if (err)
-    {
-        fprintf (stderr, "%s failed with message: \"%s\"\n",
-                 gcry_strsource (err),
-                 gcry_strerror (err));
-    }
-
-    //decrypt
-    err = gcry_cipher_decrypt (bfish,
-                               outputBuffer, getDataOutputSize(*bufferSize), buffer,
-                               *bufferSize);
-
-    if (err)
-    {
-        fprintf (stderr, "%s failed with message: \"%s\"\n",
-                 gcry_strsource (err),
-                 gcry_strerror (err));
-    }
-    
-    printf("%s\n", outputBuffer);
-
-    //close cipher handle
-    gcry_cipher_close (bfish);
+    MCRYPT mcrypt_module_open( char *algorithm, char* algorithm_directory,                char* mode, char* mode_directory);
 }
 
 ulong countCrc(FILE *f, uint32_t hdrSize)

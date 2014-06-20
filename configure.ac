@@ -18,8 +18,8 @@ AC_CHECK_LIB([z], [inflate],, [
          echo "Zlib is required for this program"
          exit -1])
 
-AC_CHECK_LIB([gcrypt], [gcry_check_version],, [
-         echo "Libgcrypt is required for this program"
+AC_CHECK_LIB([mcrypt], [mcrypt_module_open],, [
+         echo "Libmcrypt is required for this program"
          exit -1])
 
 # Checks for header files.
