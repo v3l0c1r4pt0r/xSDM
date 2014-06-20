@@ -44,7 +44,7 @@ uint32_t getDataOutputSize(uint32_t inputSize)
         return inputSize;
 }
 
-void decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, void *key, uint32_t keyLength)
+DecrError decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, void *key, uint32_t keyLength)
 {
 //     CBlowFish *cbf1 = new CBlowFish();
 //     cbf1->Initialize((unsigned char *)key,32);
@@ -53,7 +53,38 @@ void decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, void *k
 //     cbf1->Decode((unsigned char*)buffer, (unsigned char*)outputBuffer, *bufferSize);
 //     delete cbf1;
 //     *bufferSize = size;
-    MCRYPT mcrypt_module_open( char *algorithm, char* algorithm_directory,                char* mode, char* mode_directory);
+    //open encryption desciptor
+    int err = 0;
+    MCRYPT td = mcrypt_module_open( "blowfish", NULL, "ecb", NULL);
+    if(td == MCRYPT_FAILED)
+    {
+        return DD_IE;
+    }
+
+    //set decryption key
+    err = mcrypt_generic_init( td, key, keyLength, NULL);
+    if(err < 0)
+    {
+        return DD_ERR;
+    }
+
+    //decrypt
+    memcpy(outputBuffer, buffer, *bufferSize);
+    err = mdecrypt_generic( td, outputBuffer, getDataOutputSize(*bufferSize));
+    if(err != 0)
+    {
+        return DD_ERR;
+    }
+
+    //close descriptor
+    err = mcrypt_generic_deinit( td);
+    if(err < 0)
+    {
+        return DD_ERR;
+    }
+    err = mcrypt_module_close( td);
+
+    return DD_OK;
 }
 
 ulong countCrc(FILE *f, uint32_t hdrSize)
@@ -70,10 +101,12 @@ ulong countCrc(FILE *f, uint32_t hdrSize)
     return crc;
 }
 
-void loadHeader(FILE *f, Header *hdr, uint32_t hdrSize, UnpackData *ud)
+DecrError loadHeader(FILE *f, Header *hdr, uint32_t hdrSize, UnpackData *ud)
 {
     unsigned char *data = (unsigned char *)malloc(hdrSize);
     fread(data,1,hdrSize,f);
-    decryptData(data, &hdrSize, hdr, ud->headerKey, 32);
+    DecrError err = decryptData(data, &hdrSize, hdr, ud->headerKey, 32);
     free(data);
+//     printf("Error: %d",err);
+    return err;
 }

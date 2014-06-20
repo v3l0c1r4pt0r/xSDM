@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 
     //load and decode header
     Header *header = (Header*)malloc(headerSize);
-    loadHeader(in, header, headerSize, &unpackData);
+    DecrError err = loadHeader(in, header, headerSize, &unpackData);
 
     //check if valid sdc file
     fseek(in,0,SEEK_END);

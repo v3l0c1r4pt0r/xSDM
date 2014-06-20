@@ -64,6 +64,13 @@ typedef enum
   FUS_ERROR	//unidentified error
 } UnpackStatus;
 
+typedef enum
+{
+  DD_OK = 0,
+  DD_IE,	//encryption initialization error
+  DD_ERR	//uidentified error
+} DecrError;
+
 /*
  * xor every byte of a BUFFER by FACTOR
  */
@@ -79,7 +86,7 @@ UnpackStatus fillUnpackStruct(UnpackData* unpackData, void* edv);
  * decrypts data from BUFFER of BUFFERSIZE size in bytes using KEY of length of KEYLENGTH,
  * returns buffer with decrypted data and sets BUFFERSIZE according to its size
  */
-void decryptData(void* buffer, uint32_t* bufferSize, void* outputBuffer, void* key, uint32_t keyLength);
+DecrError decryptData(void* buffer, uint32_t* bufferSize, void* outputBuffer, void* key, uint32_t keyLength);
 
 /*
  * get number of bytes that need to be allocated for decryptData's output buffer
@@ -94,4 +101,4 @@ ulong countCrc(FILE *f, uint32_t hdrSize);
 /*
  * load sdc file header from current position in F into HDR buffer
  */
-void loadHeader(FILE* f, Header* hdr, uint32_t hdrSize, UnpackData* ud);
+DecrError loadHeader(FILE* f, Header* hdr, uint32_t hdrSize, UnpackData* ud);
