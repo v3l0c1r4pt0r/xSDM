@@ -12,7 +12,7 @@ Prerequisites
 You need to have following packages in your system:
 - zlib
 - check >= 0.9.4
-- libgcrypt
+- libmcrypt
 
 Installation
 ------------
