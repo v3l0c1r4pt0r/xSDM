@@ -58,14 +58,17 @@ DecrError decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, vo
     MCRYPT td = mcrypt_module_open( "blowfish", NULL, "ecb", NULL);
     if(td == MCRYPT_FAILED)
     {
-        return DD_IE;
+        return DD_AO;
     }
+    
+    int klen = mcrypt_enc_get_key_size( td);
+    printf("Max keylength: %d, keylength: %d\n",klen,keyLength);
 
     //set decryption key
     err = mcrypt_generic_init( td, key, keyLength, NULL);
     if(err < 0)
     {
-        return DD_ERR;
+        return DD_IE;
     }
 
     //decrypt
@@ -73,14 +76,14 @@ DecrError decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, vo
     err = mdecrypt_generic( td, outputBuffer, getDataOutputSize(*bufferSize));
     if(err != 0)
     {
-        return DD_ERR;
+        return DD_DE;
     }
 
     //close descriptor
     err = mcrypt_generic_deinit( td);
     if(err < 0)
     {
-        return DD_ERR;
+        return DD_DIE;
     }
     err = mcrypt_module_close( td);
 
@@ -107,6 +110,6 @@ DecrError loadHeader(FILE *f, Header *hdr, uint32_t hdrSize, UnpackData *ud)
     fread(data,1,hdrSize,f);
     DecrError err = decryptData(data, &hdrSize, hdr, ud->headerKey, 32);
     free(data);
-//     printf("Error: %d",err);
     return err;
 }
+

@@ -67,7 +67,10 @@ typedef enum
 typedef enum
 {
   DD_OK = 0,
-  DD_IE,	//encryption initialization error
+  DD_AO,	//module opening error
+  DD_IE,	//encryption init error
+  DD_DE,	//decryption error
+  DD_DIE,	//encryption deinit error
   DD_ERR	//uidentified error
 } DecrError;
 
