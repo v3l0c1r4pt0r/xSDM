@@ -46,13 +46,6 @@ uint32_t getDataOutputSize(uint32_t inputSize)
 
 DecrError decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, void *key, uint32_t keyLength)
 {
-//     CBlowFish *cbf1 = new CBlowFish();
-//     cbf1->Initialize((unsigned char *)key,32);
-//     uint32_t size = cbf1->GetOutputLength(*bufferSize);
-//     void *result = malloc(size);
-//     cbf1->Decode((unsigned char*)buffer, (unsigned char*)outputBuffer, *bufferSize);
-//     delete cbf1;
-//     *bufferSize = size;
     //open encryption desciptor
     int err = 0;
     MCRYPT td = mcrypt_module_open("blowfish-compat", NULL, "ecb", NULL);
