@@ -40,7 +40,7 @@ START_TEST (test_check_decryptdata)
       printf("0x%02X, ", ((unsigned char*)actual)[i]);
     printf("\n");
     ck_assert_msg (strncmp((char*)expected,(char*)actual,targetSize) == 0,"%s\n",actual);
-//     free(actual);
+    free(actual);
 }
 END_TEST
 
