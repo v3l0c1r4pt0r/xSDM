@@ -2,7 +2,8 @@
 
 void xorBuffer(uint8_t factor, unsigned char *buffer, uint32_t bufferSize)
 {
-    for(unsigned int i = 0; i < bufferSize; i++)
+    unsigned int i;
+    for(i = 0; i < bufferSize; i++)
     {
         buffer[i] ^= factor;
     }

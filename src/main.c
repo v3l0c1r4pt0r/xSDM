@@ -98,18 +98,19 @@ int main(int argc, char **argv)
                 "%%DEBUG_START%%\nedv: '%s'\nheader:", unpackData.unformatted
                );
         uint8_t *headerBuff = (uint8_t*)header;
-        for(int i = 0; i < 0x200; i++)
+        unsigned int i;
+        for(i = 0; i < 0x200; i++)
         {
             if(i%8==0)
                 fprintf(stderr,"\n%04X:\t",i);
             fprintf(stderr,"0x%02X ",headerBuff[i]);
         }
         fprintf(stderr,
-		"\n%%DEBUG_END%%\n%s: Warning! You have encountered cabinet with more than one file inside. This is known problem since"
-		" the program is now able to unpack only first.\n Please help improving the program by opening issue on github and paste"
-		" above debug information. Thank you.\n",
-		argv[0]
-	       );
+                "\n%%DEBUG_END%%\n%s: Warning! You have encountered cabinet with more than one file inside. This is known problem since"
+                " the program is now able to unpack only first.\n Please help improving the program by opening issue on github and paste"
+                " above debug information. Thank you.\n",
+                argv[0]
+               );
 
     }
 
@@ -205,7 +206,8 @@ int main(int argc, char **argv)
     dirName = NULL;
 
     //ensure we are after header
-    if(int r = fseek(in,headerSize+4,SEEK_SET)!=0)
+    int r;
+    if(r = fseek(in,headerSize+4,SEEK_SET)!=0)
         return r;
 
     //create inflate struct
@@ -217,7 +219,7 @@ int main(int argc, char **argv)
     stream.opaque = Z_NULL;
 
     //initialize stream
-    int r = (int)-1;
+    r = (int)-1;
     if(header->headerSignature == moreThan4gb)
         r = inflateInit(&stream);
     else
@@ -300,7 +302,8 @@ int main(int argc, char **argv)
     uint8_t *headerBuff = (uint8_t*)header;
     if(flags & F_VERBOSE)
     {
-        for(int i = 0; i < 0x200; i++)
+        unsigned int i;
+        for(i = 0; i < 0x200; i++)
         {
             if(i%8==0)
                 fprintf(stderr,"\n%04X:\t",i);
@@ -308,7 +311,7 @@ int main(int argc, char **argv)
         }
         fprintf(stderr,"\n");
     }
-    
+
     free(header);
 
     fclose(in);
