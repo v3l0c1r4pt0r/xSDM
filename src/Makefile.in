@@ -89,9 +89,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am__dirstamp = $(am__leading_dot)dirstamp
-am_xsdm_OBJECTS = main.$(OBJEXT) xsdc.$(OBJEXT) \
-	bfsh-con/blowfish.$(OBJEXT)
+am_xsdm_OBJECTS = main.$(OBJEXT) xsdc.$(OBJEXT)
 xsdm_OBJECTS = $(am_xsdm_OBJECTS)
 xsdm_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -248,7 +246,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = -Wall
 AM_LDFLAGS = 
-xsdm_SOURCES = main.cpp xsdc.cpp bfsh-con/blowfish.cpp
+xsdm_SOURCES = main.cpp xsdc.cpp
 all: all-am
 
 .SUFFIXES:
@@ -262,9 +260,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu src/Makefile
+	  $(AUTOMAKE) --foreign src/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -325,14 +323,6 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-bfsh-con/$(am__dirstamp):
-	@$(MKDIR_P) bfsh-con
-	@: > bfsh-con/$(am__dirstamp)
-bfsh-con/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) bfsh-con/$(DEPDIR)
-	@: > bfsh-con/$(DEPDIR)/$(am__dirstamp)
-bfsh-con/blowfish.$(OBJEXT): bfsh-con/$(am__dirstamp) \
-	bfsh-con/$(DEPDIR)/$(am__dirstamp)
 
 xsdm$(EXEEXT): $(xsdm_OBJECTS) $(xsdm_DEPENDENCIES) $(EXTRA_xsdm_DEPENDENCIES) 
 	@rm -f xsdm$(EXEEXT)
@@ -340,14 +330,12 @@ xsdm$(EXEEXT): $(xsdm_OBJECTS) $(xsdm_DEPENDENCIES) $(EXTRA_xsdm_DEPENDENCIES)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
-	-rm -f bfsh-con/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xsdc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@bfsh-con/$(DEPDIR)/blowfish.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -480,8 +468,6 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
-	-rm -f bfsh-con/$(DEPDIR)/$(am__dirstamp)
-	-rm -f bfsh-con/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -491,7 +477,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR) bfsh-con/$(DEPDIR)
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -537,7 +523,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR) bfsh-con/$(DEPDIR)
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

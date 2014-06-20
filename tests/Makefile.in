@@ -89,8 +89,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am_check_xsdc_OBJECTS = check_xsdc.$(OBJEXT)
 check_xsdc_OBJECTS = $(am_check_xsdc_OBJECTS)
-check_xsdc_DEPENDENCIES = $(top_builddir)/src/xsdc.o \
-	$(top_builddir)/src/bfsh-con/blowfish.o
+check_xsdc_DEPENDENCIES = $(top_builddir)/src/xsdc.o
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -461,7 +460,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 check_xsdc_SOURCES = check_xsdc.cpp $(top_builddir)/src/xsdc.h
 check_xsdc_CFLAGS = @CHECK_CFLAGS@
-check_xsdc_LDADD = $(top_builddir)/src/xsdc.o $(top_builddir)/src/bfsh-con/blowfish.o @CHECK_LIBS@
+check_xsdc_LDADD = $(top_builddir)/src/xsdc.o @CHECK_LIBS@
 all: all-am
 
 .SUFFIXES:
@@ -475,9 +474,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu tests/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign tests/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu tests/Makefile
+	  $(AUTOMAKE) --foreign tests/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
