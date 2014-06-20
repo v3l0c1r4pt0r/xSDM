@@ -4,6 +4,7 @@ int main(int argc, char **argv)
 {
     uint8_t flags = 0;
     const char *sdcFile = NULL;
+    FILE *statusStream = stdout;
     if(argc == 2)
     {
         flags &= ~F_VERBOSE;
@@ -20,14 +21,16 @@ int main(int argc, char **argv)
         return -1;
     }
     int result;
+    fprintf(statusStream, "Opening SDC file...\t\t");
     FILE *in = fopen(sdcFile,"r");
     if(in == NULL)
     {
         //error opening a file
-        printf("[FAIL]\n");
+        fprintf(statusStream, "[FAIL]\n");
         perror(sdcFile);
         return errno;
     }
+    fprintf(statusStream, "[OK]\n");
 
     //open key file
     void *keyFileName = malloc(strlen(sdcFile)+5);
@@ -36,12 +39,12 @@ int main(int argc, char **argv)
     if(key == NULL)
     {
         //error opening a file
-        printf("[FAIL]\n");
+        fprintf(statusStream, "[FAIL]\n");
         perror((char*)keyFileName);
         return errno;
     }
 
-    printf("Verifying keyfile...\t\t");
+    fprintf(statusStream, "Verifying keyfile...\t\t");
 
     //load keyFileName
     fseek(key,0,SEEK_END);
@@ -58,10 +61,10 @@ int main(int argc, char **argv)
     switch(us)
     {
     case FUS_OK:
-        printf("[OK]\n");
+        fprintf(statusStream, "[OK]\n");
         break;
     default:
-        printf("[FAIL]\n");
+        fprintf(statusStream, "[FAIL]\n");
         fprintf(stderr, "%s: Wrong format of a keyfile!\n", argv[0]);
         return us;
     }
@@ -73,7 +76,7 @@ int main(int argc, char **argv)
     free(hdrSizeBuff);
     hdrSizeBuff = NULL;
 
-    printf("Validating SDC header...\t");
+    fprintf(statusStream, "Validating SDC header...\t");
 
     //load and decode header
     Header *header = (Header*)malloc(headerSize);
@@ -84,12 +87,12 @@ int main(int argc, char **argv)
     long int sdcSize = ftell(in);
     if(header->compressedSize + headerSize + 4 != sdcSize)
     {
-        printf("[FAIL]\n");
+        fprintf(statusStream, "[FAIL]\n");
         fprintf(stderr, "%s: File given is not valid SDC file or decryption key wrong\n", argv[0]);
         return -1;
     }
 
-    printf("[OK]\n");
+    fprintf(statusStream, "[OK]\n");
 
     //check if number of files might be more than one
     if(header->headerSize > 1)
@@ -113,7 +116,7 @@ int main(int argc, char **argv)
 
     }
 
-    printf("Checking file integrity...\t");
+    fprintf(statusStream, "Checking file integrity...\t");
 
     //count crc32
     uLong crc = countCrc(in, headerSize);
@@ -123,7 +126,7 @@ int main(int argc, char **argv)
     //check if crc is valid
     if(crc != unpackData.checksum)
     {
-        printf("[FAIL]\n");
+        fprintf(statusStream, "[FAIL]\n");
         fprintf(
             stderr, "%s: CRC32 of sdc file did not match the one supplied in keyfile (0x%04X expected while have 0x%04X)\n",
             argv[0], unpackData.checksum, crc
@@ -131,21 +134,21 @@ int main(int argc, char **argv)
         return crc;
     }
 
-    printf("[OK]\n");
-    printf("Decoding file name...\t\t");
+    fprintf(statusStream, "[OK]\n");
+    fprintf(statusStream, "Decoding file name...\t\t");
 
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
     unsigned char *data = (unsigned char*)malloc(getDataOutputSize(header->fileNameLength));
     decryptData(&header->fileName, &fnLength, data, unpackData.fileNameKey, 32);
 
-    printf("[OK]\n");
+    fprintf(statusStream, "[OK]\n");
 
     if(flags & F_VERBOSE)
         fprintf(stderr,"File path: %s\n",data);
     memcpy((void*)&header->fileName,data, fnLength);
 
-    printf("Creating directory structure...\t");
+    fprintf(statusStream, "Creating directory structure...\t");
 
     char *pointer = NULL;
     while((pointer = strstr((char*)&header->fileName,"\\")) != NULL)
@@ -181,8 +184,8 @@ int main(int argc, char **argv)
         closedir(f);
     f = NULL;
 
-    printf("[OK]\n");
-    printf("Unpacking file(s)...\t\t");
+    fprintf(statusStream, "[OK]\n");
+    fprintf(statusStream, "Unpacking file(s)...\t\t");
 
     //open output file
     outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen((char*)dirName)+strlen(baseName)+3);
@@ -191,7 +194,7 @@ int main(int argc, char **argv)
     if(out == NULL)
     {
         //error opening a file
-        printf("[FAIL]\n");
+        fprintf(statusStream, "[FAIL]\n");
         perror(outFile);
         return errno;
     }
@@ -224,7 +227,7 @@ int main(int argc, char **argv)
         r = inflateInit2_(&stream,-15,ZLIB_VERSION,(int)sizeof(z_stream));
     if(r != Z_OK)
     {
-        printf("[FAIL]\n");
+        fprintf(statusStream, "[FAIL]\n");
         fprintf(stderr,"inflateInit failed with errorcode %d (%s)\n",r,stream.msg);
         return r;
     }
@@ -261,7 +264,7 @@ int main(int argc, char **argv)
         r = inflate(&stream,0);
         if(r < Z_OK)
         {
-            printf("[FAIL]\n");
+            fprintf(statusStream, "[FAIL]\n");
             fprintf(stderr,"inflate failed with errorcode %d (%s)\n",r,stream.msg);
             return r;
         }
@@ -283,7 +286,7 @@ int main(int argc, char **argv)
         memcpy(input,tmp,stream.avail_in);
     }
 
-    printf("[OK]\n");
+    fprintf(statusStream, "[OK]\n");
 
     free(tmp);
     tmp = NULL;

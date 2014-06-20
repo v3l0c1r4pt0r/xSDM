@@ -8,9 +8,6 @@
 
 #define moreThan4gb	0xd1
 
-//flags
-#define F_VERBOSE	0x01
-
 typedef struct __attribute__ ((__packed__)) header_t
 {
   uint32_t	headerSignature;
