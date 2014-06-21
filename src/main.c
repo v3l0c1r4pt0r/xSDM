@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     }
     else
         return EXIT_TOOLESS;
-    
+
     printf("Opening SDC file...\t\t");
     int result;
     FILE *in = fopen(sdcFile,"r");
@@ -111,7 +111,8 @@ int main(int argc, char **argv)
     {
         printf("[FAIL]\n");
         fprintf(stderr, "%s: File given is not valid SDC file or decryption key wrong\n", argv[0]);
-        return -1;
+        if(! (flags & F_FORCE))
+            return -1;
     }
 
     printf("[OK]\n");
@@ -153,10 +154,11 @@ int main(int argc, char **argv)
             stderr, "%s: CRC32 of sdc file did not match the one supplied in keyfile (0x%04X expected while have 0x%04X)\n",
             argv[0], unpackData.checksum, crc
         );
-        return crc;
+        if(! (flags & F_FORCE))
+            return crc;
     }
-
-    printf("[OK]\n");
+    else
+        printf("[OK]\n");
     printf("Decoding file name...\t\t");
 
     //decode data from header
@@ -309,7 +311,13 @@ int main(int argc, char **argv)
         memcpy(input,tmp,stream.avail_in);
     }
 
-    printf("[OK]\n");
+    if(bytesRemaining != 0)
+    {
+        printf("[FAIL]\n");
+        fprintf(stderr, "%s: Unexpected end of file!\n", argv[0]);
+    }
+    else
+        printf("[OK]\n");
 
     free(tmp);
     tmp = NULL;
