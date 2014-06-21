@@ -1,5 +1,10 @@
 #include "xsdc.h"
 
+void print_help(Shortness Short,char *name)
+{
+    fprintf(stderr,"Usage: %s [-v] [sdc-file-name]\n",basename(name));
+}
+
 void xorBuffer(uint8_t factor, unsigned char *buffer, uint32_t bufferSize)
 {
     unsigned int i;

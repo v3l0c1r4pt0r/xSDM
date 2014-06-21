@@ -8,9 +8,6 @@
 
 #define moreThan4gb	0xd1
 
-//flags
-#define F_VERBOSE	0x01
-
 typedef struct __attribute__ ((__packed__)) header_t
 {
   uint32_t	headerSignature;
@@ -72,6 +69,17 @@ typedef enum
   DD_DIE,	//encryption deinit error
   DD_ERR	//uidentified error
 } DecrError;
+
+typedef enum 
+{
+  PH_LONG = 0,
+  PH_SHORT
+} Shortness;
+
+/*
+ * prints help message to stdout, NAME is program name, SHORT determines if we want to print long or short usage variant
+ */
+void print_help(Shortness Short,char *name);
 
 /*
  * xor every byte of a BUFFER by FACTOR

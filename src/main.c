@@ -4,21 +4,45 @@ int main(int argc, char **argv)
 {
     uint8_t flags = 0;
     const char *sdcFile = NULL;
-    if(argc == 2)
+    int option;
+    while((option = getopt_long(argc, argv, "fIb:l:i:r:c:dvVh", options, 0)) != -1)
     {
-        flags &= ~F_VERBOSE;
-        sdcFile = argv[1];
+        switch(option)
+        {
+        case '?':
+            return EXIT_INVALIDOPT;
+            //force
+        case 'f':
+            flags |= F_FORCE;
+            break;
+            //verbose
+        case 'v':
+            flags |= F_VERBOSE;
+            break;
+            //version
+        case 'V':
+            printf("%s v%s\n","xSDM", "0.0.0");
+            return EXIT_SUCCESS;
+            //help
+        case 'h':
+            print_help(PH_LONG,argv[0]);
+            return EXIT_SUCCESS;
+            break;
+        default:
+            print_help(PH_SHORT,argv[0]);
+            return EXIT_INVALIDOPT;
+        }
     }
-    else if(argc == 3 && strcmp(argv[1],"-v") == 0)
+//     fprintf(stderr, "argc: %d; optind: %d\n", argc, optind);
+    if((argc - optind) == 1)
     {
-        flags |= F_VERBOSE;
-        sdcFile = argv[2];
+        //parsing argv successful
+        sdcFile = argv[optind];
     }
     else
-    {
-        fprintf(stderr,"Usage: %s [-v] [sdc-file-name]\n",basename(argv[0]));
-        return -1;
-    }
+        return EXIT_TOOLESS;
+    
+    printf("Opening SDC file...\t\t");
     int result;
     FILE *in = fopen(sdcFile,"r");
     if(in == NULL)
@@ -28,6 +52,7 @@ int main(int argc, char **argv)
         perror(sdcFile);
         return errno;
     }
+    printf("[OK]\n");
 
     //open key file
     void *keyFileName = malloc(strlen(sdcFile)+5);
