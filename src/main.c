@@ -5,7 +5,7 @@ int main(int argc, char **argv)
     uint8_t flags = 0;
     const char *sdcFile = NULL;
     int option;
-    while((option = getopt_long(argc, argv, "fIb:l:i:r:c:dvVh", options, 0)) != -1)
+    while((option = getopt_long(argc, argv, "fvVh", options, 0)) != -1)
     {
         switch(option)
         {
