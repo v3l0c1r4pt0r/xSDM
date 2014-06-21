@@ -40,7 +40,10 @@ int main(int argc, char **argv)
         sdcFile = argv[optind];
     }
     else
+    {
+        print_help(PH_SHORT,argv[0]);
         return EXIT_TOOLESS;
+    }
 
     printf("Opening SDC file...\t\t");
     int result;

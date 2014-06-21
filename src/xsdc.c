@@ -3,7 +3,7 @@
 void print_help(Shortness Short,char *name)
 {
     if(Short == PH_SHORT)
-        fprintf(stderr,"Usage: %s [OPTIONS] [SDC-FILE]\n", name);
+        fprintf(stderr,"Usage: %s [-vf] [SDC-FILE]\n", name);
     else
         fprintf(
             stdout,
