@@ -21,7 +21,7 @@ int main(int argc, char **argv)
             break;
             //version
         case 'V':
-            printf("%s v%s\n","xSDM", "0.0.0");	//FIXME: get from configure.ac
+            printf("%s v%s\n",PACKAGE, VERSION);
             return EXIT_SUCCESS;
             //help
         case 'h':
