@@ -1,4 +1,3 @@
 * split into functions
 - write possibility to extract more than one file
 - allow user to force process in case of wrong checksum
-- getopt
