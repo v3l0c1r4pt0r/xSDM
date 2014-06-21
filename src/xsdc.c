@@ -2,8 +2,35 @@
 
 void print_help(Shortness Short,char *name)
 {
-    fprintf(stderr,"Usage: %s [-v] [sdc-file-name]\n",name);
-    //TODO: add long usage
+    if(Short == PH_SHORT)
+        fprintf(stderr,"Usage: %s [OPTIONS] [SDC-FILE]\n", name);
+    else
+        fprintf(
+            stdout,
+            "Usage: %s [OPTIONS] [SDC-FILE]\n"
+            "Mandatory arguments to long options are mandatory for short options too.\n"
+            "\t-f, --force\t\tunpack file even if checksum is invalid\n"
+            "\t-v, --verbose\t\tbe verbose\n"
+            "\t-h, --help\t\tprint this help and exit\n"
+            "\t-V, --version\t\toutput version information and exit\n"
+//             "\t-?, --??\t\ttext\n"
+            ,name
+        );
+}
+
+void print_version()
+{
+    fprintf(
+      stdout,
+      "%s %s\n"
+      "License GPLv2+: GNU GPL version 2 or later <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.\n"
+      "This is free software: you are free to change and redistribute it.\n"
+      "There is NO WARRANTY, to the extent permitted by law.\n\n"
+      "Written by %s.\n",
+      PACKAGE,
+      VERSION,
+      "v3l0c1r4pt0r"
+    );
 }
 
 void xorBuffer(uint8_t factor, unsigned char *buffer, uint32_t bufferSize)

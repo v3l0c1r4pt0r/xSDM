@@ -82,6 +82,11 @@ typedef enum
 void print_help(Shortness Short,char *name);
 
 /*
+ * just prints version info
+ */
+void print_version();
+
+/*
  * xor every byte of a BUFFER by FACTOR
  */
 void xorBuffer(uint8_t factor, unsigned char* buffer, uint32_t bufferSize);
