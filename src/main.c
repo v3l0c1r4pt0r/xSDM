@@ -172,7 +172,7 @@ int main(int argc, char **argv)
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
     unsigned char *data = (unsigned char*)malloc(getDataOutputSize(header->fileNameLength) + 1);
-    DecrError err = decryptData(&header->fileName, &fnLength, data, unpackData.fileNameKey, 32);
+    err = decryptData(&header->fileName, &fnLength, data, unpackData.fileNameKey, 32);
     if(err != DD_OK)
     {
       printf("[FAIL]");
