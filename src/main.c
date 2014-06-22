@@ -105,6 +105,12 @@ int main(int argc, char **argv)
     //load and decode header
     Header *header = (Header*)malloc(headerSize);
     DecrError err = loadHeader(in, header, headerSize, &unpackData);
+    if(err != DD_OK)
+    {
+      printf("[FAIL]");
+      fprintf(stderr, "%s: Error when decrypting SDC header (errorcode: %d)", argv[0], err);
+      return err;
+    }
 
     //check if valid sdc file
     fseek(in,0,SEEK_END);
@@ -166,7 +172,13 @@ int main(int argc, char **argv)
     //decode data from header
     uint32_t fnLength = header->fileNameLength;
     unsigned char *data = (unsigned char*)malloc(getDataOutputSize(header->fileNameLength) + 1);
-    decryptData(&header->fileName, &fnLength, data, unpackData.fileNameKey, 32);
+    DecrError err = decryptData(&header->fileName, &fnLength, data, unpackData.fileNameKey, 32);
+    if(err != DD_OK)
+    {
+      printf("[FAIL]");
+      fprintf(stderr, "%s: Error while decrypting file name (errorcode: %d)", argv[0], err);
+      return err;
+    }
 
     printf("[OK]\n");
 
