@@ -33,7 +33,6 @@ int main(int argc, char **argv)
             return EXIT_INVALIDOPT;
         }
     }
-//     fprintf(stderr, "argc: %d; optind: %d\n", argc, optind);
     if((argc - optind) == 1)
     {
         //parsing argv successful
