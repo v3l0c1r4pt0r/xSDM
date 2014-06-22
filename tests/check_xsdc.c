@@ -53,6 +53,15 @@ START_TEST (test_check_xorbuffer)
 }
 END_TEST
 
+START_TEST (test_check_dospathtounix)
+{
+    char actual[] = "\\folder\\file.ext";
+    char expected[] = "/folder/file.ext";
+    dosPathToUnix(actual);
+    ck_assert_str_eq (actual, expected);
+}
+END_TEST
+
 Suite *
 xsdc_suite (void)
 {
@@ -63,6 +72,7 @@ xsdc_suite (void)
     tcase_add_test (tc_core, test_check_fillunpackstruct);
     tcase_add_test (tc_core, test_check_decryptdata);
     tcase_add_test (tc_core, test_check_xorbuffer);
+    tcase_add_test (tc_core, test_check_dospathtounix);
     suite_add_tcase (s, tc_core);
 
     return s;

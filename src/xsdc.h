@@ -117,3 +117,8 @@ ulong countCrc(FILE *f, uint32_t hdrSize);
  * load sdc file header from current position in F into HDR buffer
  */
 DecrError loadHeader(FILE* f, Header* hdr, uint32_t hdrSize, UnpackData* ud);
+
+/*
+ * converts MS-DOS path into UNIX path
+ */
+void dosPathToUnix(char *path);

@@ -144,3 +144,11 @@ DecrError loadHeader(FILE *f, Header *hdr, uint32_t hdrSize, UnpackData *ud)
     return err;
 }
 
+void dosPathToUnix(char* path)
+{
+    char *pointer = NULL;
+    while((pointer = strstr(path,"\\")) != NULL)
+    {
+        pointer[0] = '/';
+    }
+}

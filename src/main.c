@@ -187,12 +187,8 @@ int main(int argc, char **argv)
     memcpy((void*)&header->fileName,data, fnLength);
 
     printf("Creating directory structure...\t");
-
-    char *pointer = NULL;
-    while((pointer = strstr((char*)&header->fileName,"\\")) != NULL)
-    {
-        pointer[0] = '/';
-    }
+    
+    dosPathToUnix((char*)&header->fileName);
 
     void *dirName = malloc(header->fileNameLength);
     strncpy((char*)dirName,(char*)&header->fileName+1,header->fileNameLength);
