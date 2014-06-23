@@ -37,4 +37,4 @@ Issues
 
 More
 ----
-You can find detailed instruction on how to download SDC file and find key on [my site](http://v3l0c1r4pt0r.tk/2014/06/01/how-to-download-from-dreamspark-bypassing-secure-download-manager/).
+You can find detailed instruction on how to download SDC file and find key on [my site](http://v3l0c1r4pt0r.tk/2014/06/01/how-to-download-from-dreamspark-bypassing-secure-download-manager/). There is also description of SDC file format ([here](http://v3l0c1r4pt0r.tk/2014/06/22/sdc-file-format-description-and-security-analysis-of-sdm/))
