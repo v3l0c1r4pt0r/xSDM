@@ -236,7 +236,7 @@ int main(int argc, char **argv)
     //memory cleanup
     free(outFile);
     outFile = NULL;
-    free(sdcDir);
+    //free(sdcDir);//FIXME: SIGABRT
     sdcDir = NULL;
     free(dirName);
     dirName = NULL;
