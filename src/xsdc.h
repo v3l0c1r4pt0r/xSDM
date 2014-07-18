@@ -11,13 +11,21 @@
 typedef struct __attribute__ ((__packed__)) header_t
 {
   uint32_t	headerSignature;
-  uint32_t	xorParam;
+  uint32_t	xorSeed;
   uint32_t	headerSize;
-  uint8_t	unknown2[0x20];
+  uint32_t	fileNameOffset;
+  uint32_t	attributes;
+  uint64_t	creationTime;
+  uint64_t	accessTime;
+  uint64_t	modificationTime;
   uint32_t	compressedSize;
   uint32_t	fileSize;
-  uint32_t	fileKey;
-  uint32_t	unknown3[3];
+  uint8_t	isInflated;
+  uint8_t	isSth;
+  uint8_t	padding[2];
+  uint32_t	padding2;
+  uint32_t	unknown1;
+  uint32_t	unknown2;
   uint32_t	fileNameLength;
   uint8_t	fileName;
 } Header;
@@ -25,13 +33,20 @@ typedef struct __attribute__ ((__packed__)) header_t
 typedef struct __attribute__ ((__packed__)) header_4gb_t
 {
   uint32_t	headerSignature;
-  uint32_t	xorParam;
+  uint32_t	xorSeed;
   uint32_t	headerSize;
-  uint8_t	unknown2[0x20];
+  uint32_t	fileNameOffset;
+  uint32_t	attributes;
+  uint64_t	creationTime;
+  uint64_t	accessTime;
+  uint64_t	modificationTime;
   uint64_t	compressedSize;
   uint32_t	fileSize;
-  uint32_t	fileKey;
-  uint32_t	unknown3[3];
+  uint8_t	isInflated;
+  uint8_t	isSth;
+  uint8_t	padding[2];
+  uint32_t	unknown1;
+  uint32_t	unknown2;
   uint32_t	fileNameLength;
   uint8_t	fileName;
 } Header4gb;
