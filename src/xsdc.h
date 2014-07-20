@@ -144,4 +144,4 @@ void dosPathToUnix(char *path);
  * unix is number of seconds since 1st January 1970 (signed int)
  * both dates are 64-bit values
  */
-uint64_t winDateToUnix(uint64_t win);
+uint64_t winTimeToUnix(uint64_t win);

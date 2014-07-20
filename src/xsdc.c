@@ -153,9 +153,14 @@ void dosPathToUnix(char* path)
     }
 }
 
-uint64_t winDateToUnix(uint64_t win)
+uint64_t winTimeToUnix(uint64_t win)
 {
     return (win / 10000000) - 	//granularity: 100 nansec ( * 10^2); to seconds ( * 10^-9)
            11644473600 - 	//difference between 1601 and 1970 in seconds
            5040;		//fixing
+}
+
+void unixTimeToStr(char *buffer, size_t bufSize, uint64_t time)
+{
+  
 }
