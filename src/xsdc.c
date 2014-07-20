@@ -162,7 +162,7 @@ uint64_t winTimeToUnix(uint64_t win)
 
 void unixTimeToStr(char *buffer, size_t bufSize, uint64_t time)
 {
-    if(bufSize <= 20)
+    if(bufSize < 20)
     {
         buffer[0] = '\0';
         return;

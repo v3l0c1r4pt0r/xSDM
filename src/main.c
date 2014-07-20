@@ -219,6 +219,25 @@ int main(int argc, char **argv)
     f = NULL;
 
     printf("[OK]\n");
+    
+    if(flags & F_VERBOSE)
+    {
+#define TIMESIZE	20
+      char crtime[TIMESIZE];
+      time_t creation = winTimeToUnix(header->creationTime);
+      unixTimeToStr(crtime, TIMESIZE, creation);
+      
+      char actime[TIMESIZE];
+      time_t access = winTimeToUnix(header->accessTime);
+      unixTimeToStr(actime, TIMESIZE, access);
+      
+      char mdtime[TIMESIZE];
+      time_t modification = winTimeToUnix(header->modificationTime);
+      unixTimeToStr(mdtime, TIMESIZE, modification);
+      
+      fprintf(stderr, "File has been originally created at %s, last accessed at %s and modified at %s\n", crtime, actime, mdtime);
+    }
+    
     printf("Unpacking file(s)...\t\t");
 
     //open output file
