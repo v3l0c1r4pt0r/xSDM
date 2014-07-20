@@ -33,6 +33,7 @@ Issues
 ------
 * There may be problem with make scripts that will tell you about wrong version of automake (or possibly that you don't have it). That problem could be solved by issuing autoreconf on the project's main dir (autotools are required for this).
 * Program now cannot unpack cabinets with more than one file inside. It is due to the fact I couldn't find any (do they exist?). Nevertheless if you encounter one you are encouraged to contribute to the project by opening issue with debug message from the program.
+* The program is confirmed to work with SDC variants with the following header signatures: 0xb5, 0xd1. I'm in possession of variant 0xb3 and support for it will be added soon. If you have another variant of SDC file I encourage you to send it to me so I will be able to write support for it.
 * Any issue not described here should be reported on issues page on github.
 
 More
