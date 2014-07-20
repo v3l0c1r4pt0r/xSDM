@@ -137,3 +137,11 @@ DecrError loadHeader(FILE* f, Header* hdr, uint32_t hdrSize, UnpackData* ud);
  * converts MS-DOS path into UNIX path
  */
 void dosPathToUnix(char *path);
+
+/*
+ * converts windows file date format to unix timestamp
+ * windows date is number of 100-nanosecond ticks since 1st January 1601 (unsigned int)
+ * unix is number of seconds since 1st January 1970 (signed int)
+ * both dates are 64-bit values
+ */
+uint64_t winDateToUnix(uint64_t win);

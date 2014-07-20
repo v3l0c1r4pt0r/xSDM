@@ -21,15 +21,15 @@ void print_help(Shortness Short,char *name)
 void print_version()
 {
     fprintf(
-      stdout,
-      "%s %s\n"
-      "License GPLv2+: GNU GPL version 2 or later <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.\n"
-      "This is free software: you are free to change and redistribute it.\n"
-      "There is NO WARRANTY, to the extent permitted by law.\n\n"
-      "Written by %s.\n",
-      PACKAGE,
-      VERSION,
-      "v3l0c1r4pt0r"
+        stdout,
+        "%s %s\n"
+        "License GPLv2+: GNU GPL version 2 or later <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.\n"
+        "This is free software: you are free to change and redistribute it.\n"
+        "There is NO WARRANTY, to the extent permitted by law.\n\n"
+        "Written by %s.\n",
+        PACKAGE,
+        VERSION,
+        "v3l0c1r4pt0r"
     );
 }
 
@@ -151,4 +151,11 @@ void dosPathToUnix(char* path)
     {
         pointer[0] = '/';
     }
+}
+
+uint64_t winDateToUnix(uint64_t win)
+{
+    return (win / 10000000) - 	//granularity: 100 nansec ( * 10^2); to seconds ( * 10^-9)
+           11644473600 - 	//difference between 1601 and 1970 in seconds
+           5040;		//fixing
 }
