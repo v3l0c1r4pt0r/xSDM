@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <stdio.h>
+#include <time.h>
 #include <zlib.h>
 #include <mcrypt.h>
 
@@ -145,3 +146,9 @@ void dosPathToUnix(char *path);
  * both dates are 64-bit values
  */
 uint64_t winTimeToUnix(uint64_t win);
+
+/*
+ * converts unix timestamp to string in format "%Y/%m/%d %H:%M:%S"
+ * if BUFSZIE is too small returns empty string
+ */
+void unixTimeToStr(char *buffer, size_t bufSize, uint64_t time);

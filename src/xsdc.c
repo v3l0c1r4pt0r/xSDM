@@ -162,5 +162,11 @@ uint64_t winTimeToUnix(uint64_t win)
 
 void unixTimeToStr(char *buffer, size_t bufSize, uint64_t time)
 {
-  
+    if(bufSize <= 20)
+    {
+        buffer[0] = '\0';
+        return;
+    }
+    struct tm *ts = localtime(&time);
+    strftime(buffer, bufSize, "%Y/%m/%d %H:%M:%S", ts);
 }
