@@ -13,6 +13,7 @@ You need to have following packages in your system:
 - zlib
 - check >= 0.9.4
 - libmcrypt
+- some distros may require to have additional packages installed like libmcrypt-dev (Ubuntu)
 
 Installation
 ------------
