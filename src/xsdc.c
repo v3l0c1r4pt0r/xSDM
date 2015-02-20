@@ -101,7 +101,7 @@ DecrError decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, vo
     memcpy(outputBuffer, buffer, *bufferSize);
     int offset = 0;
     int blockSize = mcrypt_enc_get_block_size(td);
-    while(offset<=*bufferSize)
+    while(offset<*bufferSize)
     {
         err = mdecrypt_generic(td, outputBuffer + offset, blockSize);
         if(err != 0)
@@ -138,7 +138,7 @@ ulong countCrc(FILE *f, uint32_t hdrSize)
 
 DecrError loadHeader(FILE *f, Header *hdr, uint32_t hdrSize, UnpackData *ud)
 {
-    unsigned char *data = (unsigned char *)malloc(hdrSize);
+    void *data = malloc(hdrSize);
     fread(data,1,hdrSize,f);
     DecrError err = decryptData(data, &hdrSize, hdr, ud->headerKey, 32);
     free(data);
