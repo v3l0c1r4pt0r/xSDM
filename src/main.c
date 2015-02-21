@@ -129,7 +129,7 @@ int main(int argc, char **argv)
     if(header->headerSize > 1)
     {
         fprintf(stderr,
-                "%%DEBUG_START%%\nedv: '%s'\nheader:", unpackData.unformatted
+                "%%DEBUG_START%%\nedv: '%s'\nheader:", (char*)unpackData.unformatted
                );
         uint8_t *headerBuff = (uint8_t*)header;
         unsigned int i;
@@ -197,13 +197,13 @@ int main(int argc, char **argv)
     char *baseName = basename((char*)&header->fileName);
 
     //get sdc location
-    char *sdcDir = (char*)malloc(strlen(sdcFile));
+    char *sdcDir = (char*)malloc(strlen(sdcFile)+1);
     strcpy(sdcDir,sdcFile);
     sdcDir = dirname(sdcDir);
 
     //create directory according to header
     char *outFile = (char*)malloc(strlen(sdcDir)+strlen((char*)dirName)+2);
-    sprintf(outFile,"%s/%s",sdcDir,dirName);
+    sprintf(outFile,"%s/%s",sdcDir,(char*)dirName);
     DIR *f = NULL;
     if((f = opendir(outFile)) == NULL)
     {
@@ -242,7 +242,7 @@ int main(int argc, char **argv)
 
     //open output file
     outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen((char*)dirName)+strlen(baseName)+3);
-    sprintf(outFile,"%s/%s/%s",sdcDir,dirName,baseName);
+    sprintf(outFile,"%s/%s/%s",sdcDir,(char*)dirName,baseName);
     FILE *out = fopen(outFile,"w");
     if(out == NULL)
     {
@@ -262,7 +262,7 @@ int main(int argc, char **argv)
 
     //ensure we are after header
     int r;
-    if(r = fseek(in,headerSize+4,SEEK_SET)!=0)
+    if((r = fseek(in,headerSize+4,SEEK_SET))!=0)
         return r;
 
     //create inflate struct
