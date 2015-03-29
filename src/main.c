@@ -2,6 +2,7 @@
 
 int main(int argc, char **argv)
 {
+    //TODO: get rid of mem leaks (valgrind)
     uint8_t flags = 0;
     const char *sdcFile = NULL;
     int option;
@@ -44,6 +45,7 @@ int main(int argc, char **argv)
         return EXIT_TOOLESS;
     }
 
+    //TODO: rewrite msg to state first
     printf("Opening SDC file...\t\t");
     int result;
     FILE *in = fopen(sdcFile,"r");
@@ -113,8 +115,8 @@ int main(int argc, char **argv)
     }
 
     //check if valid sdc file
-    fseek(in,0,SEEK_END);
-    long int sdcSize = ftell(in);
+    fseeko(in,0,SEEK_END);
+    off_t sdcSize = ftello(in);
     if(header->compressedSize + headerSize + 4 != sdcSize)
     {
         printf("[FAIL]\n");

@@ -11,6 +11,8 @@
 #include <dirent.h>
 #include <zlib.h>
 
+#define _FILE_OFFSET_BITS 64
+
 //flags
 #define F_VERBOSE	0x01
 #define F_FORCE		0x02
