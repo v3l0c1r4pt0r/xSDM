@@ -1,3 +1,5 @@
+#define _FILE_OFFSET_BITS 64
+
 #include "xsdc.h"
 
 #include <string.h>
@@ -10,8 +12,6 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <zlib.h>
-
-#define _FILE_OFFSET_BITS 64
 
 //flags
 #define F_VERBOSE	0x01
