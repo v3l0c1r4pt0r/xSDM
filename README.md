@@ -15,6 +15,8 @@ You need to have following packages in your system:
 - libmcrypt
 - some distros may require to have additional packages installed like libmcrypt-dev (Ubuntu)
 
+You should also have 64-bit Linux system (amd64). Any other configuration (including MinGW and Mac OS X) may not work. There are few known errors that may prevent you from correctly unpacing files on old 32-bit Linux systems. I am not providing any support for more exotic systems.
+
 Installation
 ------------
 
