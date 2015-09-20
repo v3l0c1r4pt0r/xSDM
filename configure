@@ -647,6 +647,8 @@ CPPFLAGS
 LDFLAGS
 CXXFLAGS
 CXX
+ENABLE_CHECK_FALSE
+ENABLE_CHECK_TRUE
 CHECK_LIBS
 CHECK_CFLAGS
 PKG_CONFIG_LIBDIR
@@ -4224,38 +4226,27 @@ fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$CHECK_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (check >= 0.9.4) were not met:
-
-$CHECK_PKG_ERRORS
-
-Consider adjusting the PKG_CONFIG_PATH environment variable if you
-installed software in a non-standard prefix.
-
-Alternatively, you may set the environment variables CHECK_CFLAGS
-and CHECK_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
+	check=false
 elif test $pkg_failed = untried; then
      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
-is in your PATH or set the PKG_CONFIG environment variable to the full
-path to pkg-config.
-
-Alternatively, you may set the environment variables CHECK_CFLAGS
-and CHECK_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details.
-
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
-See \`config.log' for more details" "$LINENO" 5; }
+	check=false
 else
 	CHECK_CFLAGS=$pkg_cv_CHECK_CFLAGS
 	CHECK_LIBS=$pkg_cv_CHECK_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
+	check=true
 fi
+
+ if test x$check = xtrue; then
+  ENABLE_CHECK_TRUE=
+  ENABLE_CHECK_FALSE='#'
+else
+  ENABLE_CHECK_TRUE='#'
+  ENABLE_CHECK_FALSE=
+fi
+
 
 # Checks for programs.
 ac_ext=cpp
@@ -6483,6 +6474,10 @@ else
   am__EXEEXT_FALSE=
 fi
 
+if test -z "${ENABLE_CHECK_TRUE}" && test -z "${ENABLE_CHECK_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_CHECK\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 if test -z "${AMDEP_TRUE}" && test -z "${AMDEP_FALSE}"; then
   as_fn_error $? "conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5

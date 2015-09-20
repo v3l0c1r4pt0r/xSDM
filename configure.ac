@@ -7,7 +7,9 @@ AC_CONFIG_SRCDIR([src/main.h])
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_OUTPUT(Makefile src/Makefile tests/Makefile)
 # AC_CONFIG_HEADERS([config.h])
-PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],[check=true], [check=false])
+
+AM_CONDITIONAL([ENABLE_CHECK],[test x$check = xtrue])
 
 # Checks for programs.
 AC_PROG_CXX
