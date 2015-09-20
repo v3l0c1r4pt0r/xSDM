@@ -16,3 +16,5 @@ src/Makefile
 tests/Makefile
 tests/check_xsdc
 *_deps*
+*.kdev*
+
