@@ -11,9 +11,12 @@ Prerequisites
 -------------
 You need to have following packages in your system:
 - zlib
-- check >= 0.9.4
 - libmcrypt
-- some distros may require to have additional packages installed like libmcrypt-dev (Ubuntu)
+
+On some distros these packages may be split into binaries and headers (like on Debian-based systems). In this case
+you have to install packages named *-dev (eg. libmcrypt-dev).
+
+To do unit tests you also have to have check installed.
 
 You should also have 64-bit Linux system (amd64). Any other configuration (including MinGW and Mac OS X) may not work. There are few known errors that may prevent you from correctly unpacing files on old 32-bit Linux systems. I am not providing any support for more exotic systems.
 
