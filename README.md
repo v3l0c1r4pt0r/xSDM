@@ -23,6 +23,8 @@ You should also have 64-bit Linux system (amd64). Any other configuration (inclu
 Installation
 ------------
 
+You are encouraged to use stable release instead of cloning master. Currently the most stable release can be downloaded [from here](https://github.com/v3l0c1r4pt0r/xSDM/releases/tag/v1.0.0-rc1). You can also just clone repository and switch to v1.0-rc1 branch by typing ```git checkout v1.0-rc1```. If are experienced enough, you can use master branch or even one of *-dev branches to test future enhancements.
+
 To compile the program you just need to issue standard
 ```
 ./configure
