@@ -46,7 +46,7 @@ END_TEST
 
 START_TEST (test_check_xorbuffer)
 {
-    unsigned char buf[] = {'\x0', '\x80', '\x7f', '\xff'};
+    unsigned char buf[] = {'\x0', '\x80', '\x7f', '\xff', '\0'};
     uint8_t factor = 0xcd;
     xorBuffer(factor, buf, 4);
     ck_assert_str_eq ((char*)buf, "\xcd\x4d\xb2\x32");
