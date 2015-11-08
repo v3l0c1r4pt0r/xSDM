@@ -7,56 +7,64 @@
 #include <zlib.h>
 #include <mcrypt.h>
 
-#define moreThan4gb	0xd1
+#define SIG_PLAIN 0xb3
+#define SIG_UNKNOWN 0xc4
+#define SIG_ENCRYPTED 0xb5
+#define SIG_ELARGE 0xd1
 
-typedef struct __attribute__ ((__packed__)) header_t
+typedef struct __attribute__ ((__packed__))
 {
-  uint32_t	headerSignature;
-  uint32_t	xorSeed;
-  uint32_t	headerSize;
-  uint32_t	fileNameOffset;
-  uint32_t	attributes;
-  uint64_t	creationTime;
-  uint64_t	accessTime;
-  uint64_t	modificationTime;
-  uint32_t	compressedSize;
-  uint32_t	fileSize;
-  uint8_t	isInflated;
-  uint8_t	isSth;
-  uint8_t	padding[2];
-  uint32_t	padding2;
-  uint32_t	unknown1;
-  uint32_t	unknown2;
-  uint32_t	fileNameLength;
-  uint8_t	fileName;
-} Header;
+  uint32_t      fileNameOffset;
+  uint32_t      attributes;
+  uint64_t      creationTime;
+  uint64_t      accessTime;
+  uint64_t      modificationTime;
+  uint32_t      compressedSize;
+  uint32_t      fileSize;
+  uint8_t       isInflated;
+  uint8_t       isSth;
+  uint8_t       padding[2];
+  uint32_t      padding2;
+  uint32_t      unknown1;
+  uint32_t      unknown2;
+} File;
 
-typedef struct __attribute__ ((__packed__)) header_4gb_t
+typedef struct __attribute__ ((__packed__))
 {
-  uint32_t	headerSignature;
-  uint32_t	xorSeed;
-  uint32_t	headerSize;
-  uint32_t	fileNameOffset;
-  uint32_t	attributes;
-  uint64_t	creationTime;
-  uint64_t	accessTime;
-  uint64_t	modificationTime;
-  uint64_t	compressedSize;
-  uint32_t	fileSize;
-  uint8_t	isInflated;
-  uint8_t	isSth;
-  uint8_t	padding[2];
-  uint32_t	unknown1;
-  uint32_t	unknown2;
-  uint32_t	fileNameLength;
-  uint8_t	fileName;
-} Header4gb;
+  uint32_t      fileNameOffset;
+  uint32_t      attributes;
+  uint64_t      creationTime;
+  uint64_t      accessTime;
+  uint64_t      modificationTime;
+  uint64_t      compressedSize;
+  uint32_t      fileSize;
+  uint8_t       isInflated;
+  uint8_t       isSth;
+  uint8_t       padding[2];
+  uint32_t      unknown1;
+  uint32_t      unknown2;
+} File4gb;
+
+typedef struct __attribute__ ((__packed__))
+{
+  uint32_t      fileNameLength;
+  uint8_t       fileName[];
+} FileName;
 
 typedef union
 {
-  Header	header;
-  Header4gb	header4gb;
-} HeaderUnion;
+  File          file;
+  File4gb       file4gb;
+} FileUnion;
+
+typedef struct __attribute__ ((__packed__))
+{
+  uint32_t      headerSignature;
+  uint32_t      xorSeed;
+  uint32_t      headerSize;
+  FileUnion     files[];
+//   FileName      fn;
+} Header;
 
 typedef struct unpackdata_t
 {

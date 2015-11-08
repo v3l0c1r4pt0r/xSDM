@@ -104,20 +104,31 @@ int main(int argc, char **argv)
 
     printf("Validating SDC header...\t");
 
+    //check header length
+    if(headerSize < 0xff)
+    {
+        //it is not length but signature!
+      printf("[FAIL]");
+      fprintf(stderr,
+              "%s: Encountered unsupported format! Signature is probably "
+              "0x%02x\n", argv[0], headerSize);
+      return -1;
+    }
+
     //load and decode header
     Header *header = (Header*)malloc(headerSize);
     DecrError err = loadHeader(in, header, headerSize, &unpackData);
     if(err != DD_OK)
     {
       printf("[FAIL]");
-      fprintf(stderr, "%s: Error when decrypting SDC header (errorcode: %d)", argv[0], err);
+      fprintf(stderr, "%s: Error when decrypting SDC header (errorcode: %d)\n", argv[0], err);
       return err;
     }
 
     //check if valid sdc file
     fseeko(in,0,SEEK_END);
-    off_t sdcSize = ftello(in);
-    if(header->compressedSize + headerSize + 4 != sdcSize)
+    off_t sdcSize = ftello(in);//FIXME: check if still needed
+    if((sizeof(Header) + (sizeof(File) * header->headerSize)) > headerSize)
     {
         printf("[FAIL]\n");
         fprintf(stderr, "%s: File given is not valid SDC file or decryption key wrong\n", argv[0]);
@@ -131,21 +142,8 @@ int main(int argc, char **argv)
     if(header->headerSize > 1)
     {
         fprintf(stderr,
-                "%%DEBUG_START%%\nedv: '%s'\nheader:", (char*)unpackData.unformatted
-               );
-        uint8_t *headerBuff = (uint8_t*)header;
-        unsigned int i;
-        for(i = 0; i < 0x200; i++)
-        {
-            if(i%8==0)
-                fprintf(stderr,"\n%04X:\t",i);
-            fprintf(stderr,"0x%02X ",headerBuff[i]);
-        }
-        fprintf(stderr,
-                "\n%%DEBUG_END%%\n%s: Warning! You have encountered cabinet with more than one file inside. This is known problem since"
-                " the program is now able to unpack only first.\n Please help improving the program by opening issue on github and paste"
-                " above debug information. Thank you.\n",
-                argv[0]
+                "Warning! This container contains more than one file. However "
+                "this program can only extract first one. Check for updates!\n"
                );
     }
 
@@ -154,14 +152,14 @@ int main(int argc, char **argv)
     //count crc32
     uLong crc = countCrc(in, headerSize);
     if(flags & F_VERBOSE)
-        fprintf(stderr, "%s: crc32: 0x%08X; orig: 0x%08X\n", argv[0], crc, unpackData.checksum);
+        fprintf(stderr, "%s: crc32: 0x%08lX; orig: 0x%08X\n", argv[0], crc, unpackData.checksum);
 
     //check if crc is valid
     if(crc != unpackData.checksum)
     {
         printf("[FAIL]\n");
         fprintf(
-            stderr, "%s: CRC32 of sdc file did not match the one supplied in keyfile (0x%04X expected while have 0x%04X)\n",
+            stderr, "%s: CRC32 of sdc file did not match the one supplied in keyfile (0x%04X expected while have 0x%04lX)\n",
             argv[0], unpackData.checksum, crc
         );
         if(! (flags & F_FORCE))
@@ -169,34 +167,51 @@ int main(int argc, char **argv)
     }
     else
         printf("[OK]\n");
+
+    FileUnion *current = header->files;
+    File *after = &header->files[header->headerSize].file;
+    FileName *fn = (FileName*)after;
+
     printf("Decoding file name...\t\t");
 
     //decode data from header
-    uint32_t fnLength = header->fileNameLength;
-    unsigned char *data = (unsigned char*)malloc(getDataOutputSize(header->fileNameLength) + 1);
-    err = decryptData(&header->fileName, &fnLength, data, unpackData.fileNameKey, 32);
+    uint32_t fnLength = fn->fileNameLength;
+    unsigned char *data = (unsigned char*)malloc(getDataOutputSize(fn->fileNameLength) + 1);
+    err = decryptData(&fn->fileName, &fnLength, data, unpackData.fileNameKey, 32);
     if(err != DD_OK)
     {
       printf("[FAIL]");
       fprintf(stderr, "%s: Error while decrypting file name (errorcode: %d)", argv[0], err);
       return err;
     }
+    memcpy((void*)&fn->fileName,data, fnLength);
 
     printf("[OK]\n");
 
+    char *first_fn = &fn->fileName;
+    uint32_t fn_size = fnLength;
+    if(header->headerSize > 1)
+    {
+        //TODO: allow unpacking second and next files
+        FileUnion *second = &header->files[1];
+        fn_size = second->file.fileNameOffset;
+        first_fn = (char*)malloc(fn_size);
+        bzero(first_fn, fn_size);
+        memcpy(first_fn, data, fn_size - 1);
+    }
+
     if(flags & F_VERBOSE)
-        fprintf(stderr,"File path: %s\n",data);
-    memcpy((void*)&header->fileName,data, fnLength);
+        fprintf(stderr,"File path: %s\n",first_fn);
 
     printf("Creating directory structure...\t");
-    
-    dosPathToUnix((char*)&header->fileName);
 
-    void *dirName = malloc(header->fileNameLength);
-    strncpy((char*)dirName,(char*)&header->fileName+1,header->fileNameLength);
+    dosPathToUnix(first_fn);
+
+    void *dirName = malloc(fn_size);
+    strncpy((char*)dirName,first_fn,fn_size - 1);
     dirName = dirname((char*)dirName);
 
-    char *baseName = basename((char*)&header->fileName);
+    char *baseName = basename(first_fn);
 
     //get sdc location
     char *sdcDir = (char*)malloc(strlen(sdcFile)+1);
@@ -221,25 +236,25 @@ int main(int argc, char **argv)
     f = NULL;
 
     printf("[OK]\n");
-    
+
     if(flags & F_VERBOSE)
     {
 #define TIMESIZE	20
       char crtime[TIMESIZE];
-      time_t creation = winTimeToUnix(header->creationTime);
+      time_t creation = winTimeToUnix(current->file.creationTime);
       unixTimeToStr(crtime, TIMESIZE, creation);
-      
+
       char actime[TIMESIZE];
-      time_t access = winTimeToUnix(header->accessTime);
+      time_t access = winTimeToUnix(current->file.accessTime);
       unixTimeToStr(actime, TIMESIZE, access);
-      
+
       char mdtime[TIMESIZE];
-      time_t modification = winTimeToUnix(header->modificationTime);
+      time_t modification = winTimeToUnix(current->file.modificationTime);
       unixTimeToStr(mdtime, TIMESIZE, modification);
-      
+
       fprintf(stderr, "File has been originally created at %s, last accessed at %s and modified at %s\n", crtime, actime, mdtime);
     }
-    
+
     printf("Unpacking file(s)...\t\t");
 
     //open output file
@@ -277,7 +292,7 @@ int main(int argc, char **argv)
 
     //initialize stream
     r = (int)-1;
-    if(header->headerSignature == moreThan4gb)
+    if(header->headerSignature == SIG_ELARGE)
         r = inflateInit(&stream);
     else
         r = inflateInit2_(&stream,-15,ZLIB_VERSION,(int)sizeof(z_stream));
@@ -288,18 +303,25 @@ int main(int argc, char **argv)
         return r;
     }
     //read from file
-    unsigned int bytesToRead = header->compressedSize & 0x3fff;
+    unsigned int bytesToRead;
+    if(header->headerSignature == SIG_ELARGE)
+    {
+        bytesToRead = current->file4gb.compressedSize & 0x3fff;
+    }
+    else
+    {
+        bytesToRead = current->file.compressedSize & 0x3fff;
+    }
     unsigned char *input = (unsigned char*)malloc(bytesToRead);
     unsigned char *output = (unsigned char*)malloc(0x4000);
     void *tmp = malloc(bytesToRead);
 
     //determine file size
     unsigned int bytesRemaining = 0;
-    HeaderUnion *hu = (HeaderUnion*)header;
-    if(hu->header.headerSignature == moreThan4gb)
-        bytesRemaining = hu->header4gb.fileSize;
+    if(header->headerSignature == SIG_ELARGE)
+        bytesRemaining = current->file4gb.fileSize;
     else
-        bytesRemaining = hu->header.fileSize;
+        bytesRemaining = current->file.fileSize;
 
     if(flags & F_VERBOSE)
         fprintf(stderr,"file size has been set as %u (0x%04X), signature: 0x%02X\n",bytesRemaining,bytesRemaining,header->headerSignature);
