@@ -221,19 +221,12 @@ int main(int argc, char **argv)
     //create directory according to header
     char *outFile = (char*)malloc(strlen(sdcDir)+strlen((char*)dirName)+2);
     sprintf(outFile,"%s/%s",sdcDir,(char*)dirName);
-    DIR *f = NULL;
-    if((f = opendir(outFile)) == NULL)
+    int ret = createDir(outFile);
+    if(ret != 0)
     {
-        if(mkdir(outFile,S_IRWXU | S_IRWXG | S_IROTH | S_IWOTH | S_IXOTH) != 0)
-        {
-            //mkdir failed
-            fprintf(stderr,"%s: Directory '%s' creation failed with errno: %d\n",argv[0], outFile,errno);
-            return errno;
-        }
+        printf("[FAIL]\n");
+        fprintf(stderr,"%s: Directory '%s' creation failed with errno: %d\n",argv[0], outFile,errno);
     }
-    else
-        closedir(f);
-    f = NULL;
 
     printf("[OK]\n");
 

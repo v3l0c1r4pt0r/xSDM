@@ -171,3 +171,46 @@ void unixTimeToStr(char *buffer, size_t bufSize, uint64_t time)
     struct tm *ts = localtime(&time);
     strftime(buffer, bufSize, "%Y/%m/%d %H:%M:%S", ts);
 }
+
+int createDir(char* dir)
+{
+    DIR *f = NULL;
+    if((f = opendir(dir)) == NULL)
+    {
+        if(mkdir(dir,S_IRWXU | S_IRWXG | S_IROTH | S_IWOTH | S_IXOTH) != 0)
+        {
+            //mkdir failed
+            if(errno == ENOENT)
+            {
+                size_t baselen = strlen(dir);
+                char *base = (char*)malloc(baselen + 1);
+                strncpy(base, dir, baselen);
+                base = dirname(base);
+                int ret = createDir(base);
+                if(!ret)
+                {
+                    if(mkdir(dir,S_IRWXU | S_IRWXG | S_IROTH | S_IWOTH | S_IXOTH) != 0)
+                    {
+                        // fail
+                        return errno;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+            }
+            else
+            {
+                return errno;
+            }
+        }
+    }
+    else
+    {
+        // directory exists
+        closedir(f);
+    }
+    f = NULL;
+    return 0;
+}

@@ -6,6 +6,9 @@
 #include <time.h>
 #include <zlib.h>
 #include <mcrypt.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <libgen.h>
 
 #define SIG_PLAIN 0xb3
 #define SIG_UNKNOWN 0xc4
@@ -160,3 +163,8 @@ uint64_t winTimeToUnix(uint64_t win);
  * if BUFSZIE is too small returns empty string
  */
 void unixTimeToStr(char *buffer, size_t bufSize, uint64_t time);
+
+/*
+ * create directory, if its root directory does not exist, create it recursively
+ */
+int createDir(char* dir);
