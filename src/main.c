@@ -204,8 +204,8 @@ int main(int argc, char **argv)
 
         dosPathToUnix(filename);
 
-        void *dirName = malloc(fn_size);
-        strncpy((char*)dirName,filename,fn_size - 1);
+        void *dirName = malloc(fn_size + 1);
+        strcpy((char*)dirName,filename);
         dirName = dirname((char*)dirName);
 
         char *baseName = basename(filename);

@@ -184,7 +184,7 @@ int createDir(char* dir)
             {
                 size_t baselen = strlen(dir);
                 char *base = (char*)malloc(baselen + 1);
-                strncpy(base, dir, baselen);
+                strcpy(base, dir);
                 base = dirname(base);
                 int ret = createDir(base);
                 if(!ret)
