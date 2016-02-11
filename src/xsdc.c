@@ -8,9 +8,11 @@ void print_help(Shortness Short,char *name)
         fprintf(
             stdout,
             "Usage: %s [OPTIONS] [SDC-FILE]\n"
+            "OPTIONS can be one or more of the following\n"
 //             "Mandatory arguments to long options are mandatory for short options too.\n"
             "\t-f, --force\t\tunpack file even if checksum is invalid\n"
             "\t-v, --verbose\t\tbe verbose\n"
+            "\t-H, --header FILE\twrite SDC file header to FILE\n"
             "\t-h, --help\t\tprint this help and exit\n"
             "\t-V, --version\t\toutput version information and exit\n"
 //             "\t-?, --??\t\ttext\n"
