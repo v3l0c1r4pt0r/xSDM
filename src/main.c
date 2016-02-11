@@ -187,15 +187,6 @@ int main(int argc, char **argv)
         char *filename = (char*)(&fn->fileName);
         filename += current->file.fileNameOffset;
         uint32_t fn_size = strlen(filename);
-//         if(header->headerSize > 1)
-//         {
-//             //TODO: allow unpacking second and next files
-//             FileUnion *second = &header->files[1];
-//             fn_size = second->file.fileNameOffset;
-//             first_fn = (char*)malloc(fn_size);
-//             bzero(first_fn, fn_size);
-//             memcpy(first_fn, data, fn_size - 1);
-//         }
 
         if(flags & F_VERBOSE)
             fprintf(stderr,"File path: %s\n",filename);
