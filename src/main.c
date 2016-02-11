@@ -5,26 +5,41 @@ int main(int argc, char **argv)
     //TODO: get rid of mem leaks (valgrind)
     uint8_t flags = 0;
     const char *sdcFile = NULL;
+    FILE *hdrout = NULL;
     int option;
-    while((option = getopt_long(argc, argv, "fvVh", options, 0)) != -1)
+    while((option = getopt_long(argc, argv, "fvH:Vh", options, 0)) != -1)
     {
         switch(option)
         {
         case '?':
             return EXIT_INVALIDOPT;
-            //force
+        //force
         case 'f':
             flags |= F_FORCE;
             break;
-            //verbose
+        //verbose
         case 'v':
             flags |= F_VERBOSE;
             break;
-            //version
+        //header output
+        case 'H':
+            printf("Opening header sink\t\t");
+            flags |= F_HEADEROUT;
+            hdrout = fopen(optarg, "w");
+            if(hdrout == NULL)
+            {
+                //error opening a file
+                printf("[FAIL]\n");
+                perror(hdrout);
+                return errno;
+            }
+            printf("[OK]\n");
+            break;
+        //version
         case 'V':
             print_version();
             return EXIT_SUCCESS;
-            //help
+        //help
         case 'h':
             print_help(PH_LONG,argv[0]);
             return EXIT_SUCCESS;
@@ -179,6 +194,14 @@ int main(int argc, char **argv)
     memcpy((void*)&fn->fileName,data, fnLength);
 
     printf("[OK]\n");
+
+    // write decrypted header to file
+    if(flags & F_HEADEROUT && hdrout)
+    {
+        fwrite(&headerSize, 4, 1, hdrout);
+        fwrite(header, headerSize, 1, hdrout);
+        fclose(hdrout);
+    }
 
     // unpack files
     int fileid;
@@ -372,20 +395,6 @@ int main(int argc, char **argv)
     unpackData.unformatted = NULL;
     unpackData.fileNameKey = NULL;
     unpackData.headerKey = NULL;
-
-    //write sdc header to &2
-    uint8_t *headerBuff = (uint8_t*)header;
-    if(flags & F_VERBOSE)
-    {
-        unsigned int i;
-        for(i = 0; i < 0x200; i++)
-        {
-            if(i%8==0)
-                fprintf(stderr,"\n%04X:\t",i);
-            fprintf(stderr,"0x%02X ",headerBuff[i]);
-        }
-        fprintf(stderr,"\n");
-    }
 
     free(header);
 
