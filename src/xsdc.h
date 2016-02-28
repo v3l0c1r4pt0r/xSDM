@@ -18,6 +18,7 @@
 #define print_status(fmt, ...) { printf(" [      ] "fmt"\r", ##__VA_ARGS__); fflush(stdout); }
 #define print_ok() { printf(" [  OK  ]\n"); }
 #define print_fail() { printf(" [ FAIL ]\n"); }
+#define print_progress printProgress
 
 typedef struct __attribute__ ((__packed__))
 {
@@ -172,3 +173,8 @@ void unixTimeToStr(char *buffer, size_t bufSize, uint64_t time);
  * create directory, if its root directory does not exist, create it recursively
  */
 int createDir(char* dir);
+
+/*
+ * print progress of current task (0-6)
+ */
+void printProgress(uint8_t progress);

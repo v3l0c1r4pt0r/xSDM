@@ -216,3 +216,17 @@ int createDir(char* dir)
     f = NULL;
     return 0;
 }
+
+void printProgress(uint8_t progress)
+{
+    if(progress > 6)
+        return;
+    int i;
+    char progressbar[7] = "      ";
+    for(i = 0; i < progress; i++)
+    {
+        progressbar[i] = '#';
+    }
+    printf(" [%s]\r", progressbar);
+    fflush(stdout);
+}

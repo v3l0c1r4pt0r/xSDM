@@ -325,12 +325,22 @@ int main(int argc, char **argv)
             bytesRemaining = current->file4gb.fileSize;
         else
             bytesRemaining = current->file.fileSize;
+        double fileSize = bytesRemaining, remaining;
+        uint8_t progress = 0;
 
         if(flags & F_VERBOSE)
             fprintf(stderr,"file size has been set as %u (0x%04X), signature: 0x%02X\n",bytesRemaining,bytesRemaining,header->headerSignature);
 
         while(bytesRemaining != 0)
         {
+            // check progress
+            remaining = bytesRemaining;
+            if((((fileSize - remaining) / fileSize) * 6) > progress)
+            {
+                ++progress;
+                print_progress(progress);
+            }
+
             result = fread(input+stream.avail_in,1,bytesToRead-stream.avail_in,in);
             if(result == 0 && stream.avail_in == 0)	//stop only if stream iflated whole previous buffer
                 return 1;				//still have bytes remaining but container end reached
