@@ -213,8 +213,6 @@ int main(int argc, char **argv)
         if(flags & F_VERBOSE)
             fprintf(stderr,"File path: %s\n",filename);
 
-        printf("\t Creating directory structure...\r");
-
         dosPathToUnix(filename);
 
         void *dirName = malloc(fn_size + 1);
@@ -227,6 +225,8 @@ int main(int argc, char **argv)
         char *sdcDir = (char*)malloc(strlen(sdcFile)+1);
         strcpy(sdcDir,sdcFile);
         sdcDir = dirname(sdcDir);
+
+        printf("\t Creating directory structure at '%s'...\r", dirName);
 
         //create directory according to header
         char *outFile = (char*)malloc(strlen(sdcDir)+strlen((char*)dirName)+2);
@@ -258,7 +258,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "File has been originally created at %s, last accessed at %s and modified at %s\n", crtime, actime, mdtime);
         }
 
-        printf("\t Unpacking file(s)...\r");
+        printf("\t Unpacking '%s'...\r", baseName);
 
         //open output file
         outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen((char*)dirName)+strlen(baseName)+3);
