@@ -29,11 +29,11 @@ int main(int argc, char **argv)
             if(hdrout == NULL)
             {
                 //error opening a file
-                printf("[ FAIL ]\n");
+                print_fail();
                 perror(hdrout);
                 return errno;
             }
-            printf("[  OK  ]\n");
+            print_ok();
             break;
         //version
         case 'V':
@@ -66,11 +66,11 @@ int main(int argc, char **argv)
     if(in == NULL)
     {
         //error opening a file
-        printf("[ FAIL ]\n");
+        print_fail();
         perror(sdcFile);
         return errno;
     }
-    printf("[  OK  ]\n");
+    print_ok();
 
     //open key file
     void *keyFileName = malloc(strlen(sdcFile)+5);
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
     if(key == NULL)
     {
         //error opening a file
-        printf("[ FAIL ]\n");
+        print_fail();
         perror((char*)keyFileName);
         return errno;
     }
@@ -101,10 +101,10 @@ int main(int argc, char **argv)
     switch(us)
     {
     case FUS_OK:
-        printf("[  OK  ]\n");
+        print_ok();
         break;
     default:
-        printf("[ FAIL ]\n");
+        print_fail();
         fprintf(stderr, "%s: Wrong format of a keyfile!\n", argv[0]);
         return us;
     }
@@ -122,7 +122,7 @@ int main(int argc, char **argv)
     if(headerSize < 0xff)
     {
         //it is not length but signature!
-        printf("[ FAIL ]\n");
+        print_fail();
         fprintf(stderr,
               "%s: Encountered unsupported format! Signature is probably "
               "0x%02x\n", argv[0], headerSize);
@@ -134,7 +134,7 @@ int main(int argc, char **argv)
     DecrError err = loadHeader(in, header, headerSize, &unpackData);
     if(err != DD_OK)
     {
-        printf("[ FAIL ]\n");
+        print_fail();
         fprintf(stderr, "%s: Error when decrypting SDC header (errorcode: %d)\n", argv[0], err);
         return err;
     }
@@ -150,7 +150,7 @@ int main(int argc, char **argv)
             return -1;
     }
 
-    printf("[  OK  ]\n");
+    print_ok();
 
     print_status("Checking file integrity");
 
@@ -162,7 +162,7 @@ int main(int argc, char **argv)
     //check if crc is valid
     if(crc != unpackData.checksum)
     {
-        printf("[ FAIL ]\n");
+        print_fail();
         fprintf(
             stderr, "%s: CRC32 of sdc file did not match the one supplied in keyfile (0x%04X expected while have 0x%04lX)\n",
             argv[0], unpackData.checksum, crc
@@ -171,7 +171,7 @@ int main(int argc, char **argv)
             return crc;
     }
     else
-        printf("[  OK  ]\n");
+        print_ok();
 
     FileUnion *current = header->files;
     off_t filestart = headerSize + 4;
@@ -186,13 +186,13 @@ int main(int argc, char **argv)
     err = decryptData(&fn->fileName, &fnLength, data, unpackData.fileNameKey, 32);
     if(err != DD_OK)
     {
-        printf("[ FAIL ]\n");
+        print_fail();
         fprintf(stderr, "%s: Error while decrypting file name (errorcode: %d)", argv[0], err);
         return err;
     }
     memcpy((void*)&fn->fileName,data, fnLength);
 
-    printf("[  OK  ]\n");
+    print_ok();
 
     // write decrypted header to file
     if(flags & F_HEADEROUT && hdrout)
@@ -234,11 +234,11 @@ int main(int argc, char **argv)
         int ret = createDir(outFile);
         if(ret != 0)
         {
-            printf("[ FAIL ]\n");
+            print_fail();
             fprintf(stderr,"%s: Directory '%s' creation failed with errno: %d\n",argv[0], outFile,errno);
         }
 
-        printf("[  OK  ]\n");
+        print_ok();
 
         if(flags & F_VERBOSE)
         {
@@ -267,7 +267,7 @@ int main(int argc, char **argv)
         if(out == NULL)
         {
             //error opening a file
-            printf("[ FAIL ]\n");
+            print_fail();
             perror(outFile);
             return errno;
         }
@@ -301,7 +301,7 @@ int main(int argc, char **argv)
             r = inflateInit2_(&stream,-15,ZLIB_VERSION,(int)sizeof(z_stream));
         if(r != Z_OK)
         {
-            printf("[ FAIL ]\n");
+            print_fail();
             fprintf(stderr,"inflateInit failed with errorcode %d (%s)\n",r,stream.msg);
             return r;
         }
@@ -345,7 +345,7 @@ int main(int argc, char **argv)
             r = inflate(&stream,0);
             if(r < Z_OK)
             {
-                printf("[ FAIL ]\n");
+                print_fail();
                 fprintf(stderr,"inflate failed with errorcode %d (%s)\n",r,stream.msg);
                 return r;
             }
@@ -369,11 +369,11 @@ int main(int argc, char **argv)
 
         if(bytesRemaining != 0)
         {
-            printf("[ FAIL ]\n");
+            print_fail();
             fprintf(stderr, "%s: Unexpected end of file!\n", argv[0]);
         }
         else
-            printf("[  OK  ]\n");
+            print_ok();
 
         fclose(out);
         free(tmp);

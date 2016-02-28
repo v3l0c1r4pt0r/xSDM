@@ -15,7 +15,9 @@
 #define SIG_ENCRYPTED 0xb5
 #define SIG_ELARGE 0xd1
 
-#define print_status(fmt, ...) { printf("\t "fmt"\r", ##__VA_ARGS__); fflush(stdout); }
+#define print_status(fmt, ...) { printf(" [      ] "fmt"\r", ##__VA_ARGS__); fflush(stdout); }
+#define print_ok() { printf(" [  OK  ]\n"); }
+#define print_fail() { printf(" [ FAIL ]\n"); }
 
 typedef struct __attribute__ ((__packed__))
 {
