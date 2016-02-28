@@ -60,7 +60,7 @@ int main(int argc, char **argv)
         return EXIT_TOOLESS;
     }
 
-    printf("\t Opening SDC file...\r");
+    printf("\t Opening SDC file\r");
     int result;
     FILE *in = fopen(sdcFile,"r");
     if(in == NULL)
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
         return errno;
     }
 
-    printf("\t Verifying keyfile...\r");
+    printf("\t Verifying keyfile\r");
 
     //load keyFileName
     fseek(key,0,SEEK_END);
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
     free(hdrSizeBuff);
     hdrSizeBuff = NULL;
 
-    printf("\t Validating SDC header...\r");
+    printf("\t Validating SDC header\r");
 
     //check header length
     if(headerSize < 0xff)
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 
     printf("[  OK  ]\n");
 
-    printf("\t Checking file integrity...\r");
+    printf("\t Checking file integrity\r");
 
     //count crc32
     uLong crc = countCrc(in, headerSize);
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
     File *after = &header->files[header->headerSize].file;
     FileName *fn = (FileName*)after;
 
-    printf("\t Decoding file name...\r");
+    printf("\t Decoding file name\r");
 
     //decode data from header
     uint32_t fnLength = fn->fileNameLength;
@@ -226,7 +226,7 @@ int main(int argc, char **argv)
         strcpy(sdcDir,sdcFile);
         sdcDir = dirname(sdcDir);
 
-        printf("\t Creating directory structure at '%s'...\r", dirName);
+        printf("\t Creating directory structure at '%s'\r", dirName);
 
         //create directory according to header
         char *outFile = (char*)malloc(strlen(sdcDir)+strlen((char*)dirName)+2);
@@ -258,7 +258,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "File has been originally created at %s, last accessed at %s and modified at %s\n", crtime, actime, mdtime);
         }
 
-        printf("\t Unpacking '%s'...\r", baseName);
+        printf("\t Unpacking '%s'\r", baseName);
 
         //open output file
         outFile = (char*)realloc(outFile, strlen(sdcDir)+strlen((char*)dirName)+strlen(baseName)+3);
