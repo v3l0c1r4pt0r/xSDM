@@ -15,6 +15,8 @@
 #define SIG_ENCRYPTED 0xb5
 #define SIG_ELARGE 0xd1
 
+#define print_status(fmt, ...) { printf("\t "fmt"\r", ##__VA_ARGS__); fflush(stdout); }
+
 typedef struct __attribute__ ((__packed__))
 {
   uint32_t      fileNameOffset;
