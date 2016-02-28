@@ -123,8 +123,8 @@ int main(int argc, char **argv)
     if(headerSize < 0xff)
     {
         //it is not length but signature!
-      printf("[FAIL]");
-      fprintf(stderr,
+        printf("[FAIL]\n");
+        fprintf(stderr,
               "%s: Encountered unsupported format! Signature is probably "
               "0x%02x\n", argv[0], headerSize);
       return -1;
@@ -135,9 +135,9 @@ int main(int argc, char **argv)
     DecrError err = loadHeader(in, header, headerSize, &unpackData);
     if(err != DD_OK)
     {
-      printf("[FAIL]");
-      fprintf(stderr, "%s: Error when decrypting SDC header (errorcode: %d)\n", argv[0], err);
-      return err;
+        printf("[FAIL]\n");
+        fprintf(stderr, "%s: Error when decrypting SDC header (errorcode: %d)\n", argv[0], err);
+        return err;
     }
 
     //check if valid sdc file
@@ -187,9 +187,9 @@ int main(int argc, char **argv)
     err = decryptData(&fn->fileName, &fnLength, data, unpackData.fileNameKey, 32);
     if(err != DD_OK)
     {
-    printf("[FAIL]");
-    fprintf(stderr, "%s: Error while decrypting file name (errorcode: %d)", argv[0], err);
-    return err;
+        printf("[FAIL]\n");
+        fprintf(stderr, "%s: Error while decrypting file name (errorcode: %d)", argv[0], err);
+        return err;
     }
     memcpy((void*)&fn->fileName,data, fnLength);
 
