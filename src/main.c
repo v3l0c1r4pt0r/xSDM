@@ -226,7 +226,7 @@ int main(int argc, char **argv)
         strcpy(sdcDir,sdcFile);
         sdcDir = dirname(sdcDir);
 
-        print_status("Creating directory structure at '%s'", dirName);
+        print_status("Creating directory structure at '%s'", (char*)dirName);
 
         //create directory according to header
         char *outFile = (char*)malloc(strlen(sdcDir)+strlen((char*)dirName)+2);
