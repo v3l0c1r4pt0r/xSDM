@@ -124,7 +124,7 @@ DecrError decryptData(void *buffer, uint32_t *bufferSize, void *outputBuffer, vo
     return DD_OK;
 }
 
-ulong countCrc(FILE *f, uint32_t hdrSize)
+uint32_t countCrc(FILE *f, uint32_t hdrSize)
 {
     void *buffer = malloc(0x1000);
     uLong crc = crc32(0L, Z_NULL, 0);
@@ -135,7 +135,7 @@ ulong countCrc(FILE *f, uint32_t hdrSize)
         crc = crc32(crc, (Bytef*)buffer, bytes);
     }
     free(buffer);
-    return crc;
+    return (uint32_t) crc;
 }
 
 DecrError loadHeader(FILE *f, Header *hdr, uint32_t hdrSize, UnpackData *ud)

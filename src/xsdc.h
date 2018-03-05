@@ -143,7 +143,7 @@ uint32_t getDataOutputSize(uint32_t inputSize);
 /*
  * count and return crc of sdc file's data area
  */
-ulong countCrc(FILE *f, uint32_t hdrSize);
+uint32_t countCrc(FILE *f, uint32_t hdrSize);
 
 /*
  * load sdc file header from current position in F into HDR buffer
